@@ -1,0 +1,65 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+  <h2>🎓 Student AI Tools</h2>
+  <p>Upload a handwritten math question or type your math problem below. SUNMAC AI will solve it step-by-step.</p>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label><strong>Upload Handwritten Image (optional):</strong></label><br>
+    <input type="file" name="image"><br><br>
+
+    <label><strong>Or type a math question:</strong></label><br>
+    <textarea name="question" rows="5" cols="60" placeholder="e.g. Solve 2x + 5 = 15">{{ question }}</textarea><br><br>
+
+    <button type="submit">Solve</button>
+  </form>
+
+  {% if result %}
+    <div class="ai-book-container">
+      <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
+
+      <div class="ai-book-page" id="book-content">
+        <div class="ai-question">
+          <strong>Question:</strong><br>
+          {{ question }}
+        </div>
+        <div class="solution-text">
+          {{ result|linebreaks }}
+        </div>
+      </div>
+
+      <button class="print-button" onclick="printBook()">🖨️ Print / Save as PDF</button>
+    </div>
+  {% endif %}
+
+  <!-- MathJax for LaTeX -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- Print Script -->
+<script>
+  function printBook() {
+    const content = document.getElementById('book-content').innerHTML;
+    const cssURL = "{% static 'css/style.css' %}";
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>SUNMAC AI – Digital Solution</title>
+          <link rel="stylesheet" href="${cssURL}">
+        </head>
+        <body class="print-book-body">
+          ${content}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+</script>
+{% endblock %}

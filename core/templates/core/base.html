@@ -1,0 +1,55 @@
+{% load static %}
+<!-- core/templates/core/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SUNMAC | Dashboard</title>
+
+    <!-- Correct stylesheet path -->
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    {# If your style.css is inside core/static/core/css/style.css #}
+
+    {# If your style.css is inside static/css/style.css, use this instead: #}
+    {# <link rel="stylesheet" href="{% static 'css/style.css' %}"> #}
+</head>
+<body>
+    <header>
+        <h1>Welcome to SUNMAC</h1>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+
+            {% if user.is_authenticated %}
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="background:none; border:none; color:#1a237e; cursor:pointer; text-decoration:underline;">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" style="color:#1a237e; font-weight:bold;">Login</a>
+                <a href="{% url 'signup' %}" style="color:#1a237e; font-weight:bold;">Sign Up</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer style="margin-top: 30px; padding: 10px; text-align: center;">
+        <p style="color: #555;">
+            &copy; 2025 <strong>SUNMAC</strong>. All rights reserved. |
+            Designed for intelligent learning.
+        </p>
+    </footer>
+
+    <!-- MathJax for rendering LaTeX math -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</body>
+</html>

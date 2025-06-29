@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+{% block content %}
+  <h2>👩‍🏫 Teacher AI Tools</h2>
+  <p>Paste a math problem or concept. SUNMAC AI will help generate solutions or explanations for your students.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="question" rows="5" cols="60" placeholder="Enter a concept or example...">{{ question }}</textarea><br><br>
+    <button type="submit">Generate Teaching Aid</button>
+  </form>
+
+  {% if solution %}
+    <h3>📘 AI Teaching Aid:</h3>
+    <div class="solution-box">
+      <pre>{{ solution }}</pre>
+    </div>
+  {% endif %}
+{% endblock %}

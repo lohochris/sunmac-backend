@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SUNMAC</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <div class="hero" id="home">
+    <header class="navbar">
+      <div class="logo">S</div>
+      <h1 class="brand">SUNMAC</h1>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+        <a href="#tools">Explore Tools</a>
+
+        {% if user.is_authenticated %}
+          <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="signup">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}"><button class="signup">Login</button></a>
+          <a href="{% url 'signup' %}"><button class="signup">Sign Up</button></a>
+        {% endif %}
+      </nav>
+    </header>
+
+    <div class="greeting-marquee">
+      <p>🌟 Welcome to SUNMAC [Strategic Upgrade Network for Mathematics and AI Competence] — Where Mathematics Meets Innovation & AI!</p>
+    </div>
+
+    <div class="hero-content">
+      <h2>Empowering<br>Mathematics and<br>AI Competence</h2>
+      <p>Building the future of learning with intelligent tools.</p>
+      <div class="cta-buttons">
+        <a href="{% url 'signup' %}">
+          <button class="btn-student">Try Student AI</button>
+        </a>
+        <a href="{% url 'signup' %}">
+          <button class="btn-teacher">Explore Teacher Tools</button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Home Section -->
+  <section class="about glowing-box" id="home">
+    <h2>Welcome to SUNMAC</h2>
+    <p>
+      <strong>SUNMAC</strong> is your gateway to a transformative experience in mathematics and AI-enhanced education. <br><br>
+      From personalized student support to innovative tools for teachers, SUNMAC equips every learner and educator with the power of technology. <br><br>
+      Step into a smarter future — where mathematics is visual, interactive, and powered by intelligent systems.
+    </p>
+  </section>
+
+  <!-- Info Cards -->
+  <section class="info-section">
+    <div class="info-card">
+      <h3>Transforming Math Education</h3>
+      <p class="justified-text">SUNMAC bridges the gap between learning and teaching mathematics across digital environments.</p>
+    </div>
+    <div class="info-card">
+      <h3 class="big">50+</h3>
+      <p class="justified-text">Interactive learning modules</p>
+    </div>
+    <div class="info-card">
+      <h3>SUNMAC MISSION</h3>
+      <p class="justified-text">Our mission is to democratize access to quality STEM education worldwide.</p>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about glowing-box">
+    <h2>About SUNMAC</h2>
+    <p>
+      <strong>SUNMAC (Strategic Upgrade Network for Mathematics and AI Competence)</strong> is revolutionizing the way the world experiences mathematics.<br><br>
+      We go beyond textbooks — we fuse the power of Artificial Intelligence with human curiosity to make math not just understandable, but unforgettable.<br><br>
+      Whether you're a student seeking clarity, a teacher designing impact, or a school shaping the future — SUNMAC is your intelligent partner in the journey of discovery.
+    </p>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services" id="services">
+    <h2>Our Services</h2>
+    <div class="service-cards">
+      <div class="card">
+        <h3>AI Step-by-Step Solver</h3>
+        <p class="justified-text">Instantly solve Math problems with detailed explanations.</p>
+      </div>
+      <div class="card">
+        <h3>Curriculum Support</h3>
+        <p class="justified-text">
+          Aligned with WAEC, NECO, and international standards 
+          including SAT, IGCSE, GRE, IB, and Cambridge certifications.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Performance Analytics</h3>
+        <p class="justified-text">Track student progress and identify gaps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Explore Tools Section -->
+  <section class="tools" id="tools">
+    <h2>Explore Tools</h2>
+    <div class="tool-buttons">
+      <a href="{% url 'student_tools' %}">
+        <button class="btn-student">Try Student Tools</button>
+      </a>
+      <a href="{% url 'teacher_tools' %}">
+        <button class="btn-teacher">Explore Teacher Tools</button>
+      </a>
+    </div>
+  </section>
+
+  <!-- Sign Up Section -->
+  <section class="signup-section" id="signup">
+    <h2>Sign Up</h2>
+    <form class="signup-form">
+      <input type="text" placeholder="Full Name" required />
+      <input type="email" placeholder="Email Address" required />
+      <input type="password" placeholder="Password" required />
+      <button type="submit">Register</button>
+    </form>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="about" id="contact">
+    <div class="container">
+      <h2>Contact Us</h2>
+      <p>Email: <a href="mailto:lohoinfortech@gmail.com">lohoinfortech@gmail.com</a></p>
+      <p>WhatsApp: 
+        <a href="https://wa.me/2348173714727" target="_blank">+234 817 371 4727</a> |
+        <a href="https://wa.me/23826000659" target="_blank">+23481 260 00659</a>
+      </p>
+      <p>LinkedIn: 
+        <a href="https://www.linkedin.com/in/lohochristopher/" target="_blank">
+          Loho Christopher
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 SUNMAC. All rights reserved. | Designed for intelligent learning.<br />
+    Developed by <strong>INFORTECHMATICS</strong> | Crafted with vision by <strong>Loho Christopher</strong>.
+  </footer> 
+
+</body>
+</html>

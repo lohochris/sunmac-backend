@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <div class="dashboard-container">
+    <h1>Welcome, {{ user.username }}!</h1>
+
+    {% if role == 'student' %}
+      <p>You are logged in as a <strong>Student</strong>.</p>
+      <ul>
+        <li><a href="{% url 'student_tools' %}">Access Student Tools</a></li>
+        <li><a href="#">View Assignments</a></li>
+        <li><a href="#">Track Your Progress</a></li>
+      </ul>
+
+    {% elif role == 'teacher' %}
+      <p>You are logged in as a <strong>Teacher</strong>.</p>
+      <ul>
+        <li><a href="{% url 'teacher_tools' %}">Access Teacher Tools</a></li>
+        <li><a href="#">Create Assignments</a></li>
+        <li><a href="#">Analyze Student Performance</a></li>
+      </ul>
+
+    {% else %}
+      <p>Your role has not been identified. Please contact support.</p>
+    {% endif %}
+
+    {% if solution %}
+      <div class="ai-book-container">
+        <h2 class="ai-title">📘 SUNMAC AI – Solved Just for You</h2>
+        <div class="ai-book-page">
+          <div class="ai-question">
+            <strong>📖 Question:</strong>
+            <p>{{ question }}</p>
+          </div>
+          <hr>
+          <div class="ai-solution">
+            <strong>✅ Solution:</strong>
+            <div style="margin-top: 10px;">
+              {{ solution|safe }}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+  </div>
+
+{% endblock %}

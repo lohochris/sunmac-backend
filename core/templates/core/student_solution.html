@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% block content %}
+  <div class="ai-book-container">
+    <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
+    <div class="ai-book-page">
+      <div class="ai-question">
+        <strong>Question:</strong><br>
+        {{ question }}
+      </div>
+      <div class="solution-text">
+        {{ result|linebreaks }}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+  <h1>Welcome Student, {{ user.username }}!</h1>
+  <p>This is your student dashboard. Explore your learning tools below:</p>
+
+  <ul>
+    <li><a href="#">🧮 AI Math Solver</a></li>
+    <li><a href="#">📘 View Learning Modules</a></li>
+    <li><a href="#">📊 Track Your Progress</a></li>
+    <li><a href="#">🧠 Practice Quizzes</a></li>
+  </ul>
+
+  {% if question and result %}
+  <!-- DIGITAL BOOK OUTPUT -->
+  <div class="book-view">
+    <h2>SUNMAC AI – Digital Notebook 📖</h2>
+    <div class="book-page">
+      <p><strong>🧠 Question:</strong></p>
+      <p class="question-box">{{ question }}</p>
+
+      <hr>
+
+      <p><strong>📝 Step-by-step Solution:</strong></p>
+      <div class="solution-text">
+        {{ result|safe }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <p><a href="{% url 'logout' %}">Logout</a></p>
+</div>
+
+{% endblock %}

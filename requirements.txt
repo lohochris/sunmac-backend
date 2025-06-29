@@ -1,0 +1,5 @@
+Django>=5.2
+python-dotenv
+Pillow
+pytesseract
+openai>=1.0.0

@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - SUNMAC</title>
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+  <section class="signup-section">
+    <h2>Login</h2>
+
+    {% if form.errors %}
+      <p style="color: red;">Please enter a correct username and password.</p>
+    {% endif %}
+
+    <form method="post" class="signup-form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+
+    <p>
+      <a href="{% url 'password_reset' %}" style="color: #1a237e; font-weight: bold;">
+        Forgot your password?
+      </a>
+    </p>
+
+    <p>
+      Don't have an account?
+      <a href="{% url 'signup' %}" style="color: #1a237e; font-weight: bold;">
+        Sign up
+      </a>
+    </p>
+  </section>
+</body>
+</html>

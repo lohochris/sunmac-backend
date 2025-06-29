@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+  <div class="dashboard-container">
+    <h1>Welcome Teacher, {{ user.username }}!</h1>
+    <p>This is your teacher dashboard. You can manage your teaching tools below:</p>
+
+    <ul>
+      <li><a href="#">✏️ Create Assignments</a></li>
+      <li><a href="#">📂 Manage Student Submissions</a></li>
+      <li><a href="#">📈 Monitor Student Performance</a></li>
+      <li><a href="#">💡 Access Teaching Resources</a></li>
+    </ul>
+
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+  </div>
+{% endblock %}
