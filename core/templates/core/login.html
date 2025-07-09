@@ -4,10 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Login - SUNMAC</title>
-  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 </head>
 <body>
   <section class="signup-section">
+    <div class="section-wrapper">
     <h2>Login</h2>
 
     {% if form.errors %}
@@ -32,6 +33,7 @@
         Sign up
       </a>
     </p>
+  </div>
   </section>
 </body>
 </html>

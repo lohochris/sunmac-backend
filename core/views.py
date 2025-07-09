@@ -184,3 +184,10 @@ def generate_teaching_guide(topic):
         return response.choices[0].message.content.strip()
     except Exception as e:
         return f"❌ Together AI Error: {str(e)}"
+def ai_solver_result(request):
+    question = request.GET.get('q', 'Example: Solve x^2 + 2x + 1 = 0')
+    solution = "Step-by-step explanation goes here..."  # Replace with actual logic
+    return render(request, 'core/ai_solver_result.html', {
+        'question': question,
+        'solution': solution
+    })

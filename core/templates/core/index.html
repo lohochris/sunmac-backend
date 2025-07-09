@@ -5,64 +5,60 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SUNMAC</title>
-  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
 </head>
 <body>
 
-  <!-- Hero Section -->
-  <div class="hero" id="home">
-    <header class="navbar">
-      <div class="logo">S</div>
-      <h1 class="brand">SUNMAC</h1>
-      <nav>
-        <a href="#">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#contact">Contact</a>
-        <a href="#tools">Explore Tools</a>
+   <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">S</div>
+    <h1 class="brand">SUNMAC</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+      <a href="#tools">Explore Tools</a>
 
-        {% if user.is_authenticated %}
-          <form method="post" action="{% url 'logout' %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="signup">Logout</button>
-          </form>
-        {% else %}
-          <a href="{% url 'login' %}"><button class="signup">Login</button></a>
-          <a href="{% url 'signup' %}"><button class="signup">Sign Up</button></a>
-        {% endif %}
-      </nav>
-    </header>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="signup">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}"><button class="signup">Login</button></a>
+        <a href="{% url 'signup' %}"><button class="signup">Sign Up</button></a>
+      {% endif %}
+    </nav>
+  </header>
 
-    <div class="greeting-marquee">
-      <p>🌟 Welcome to SUNMAC [Strategic Upgrade Network for Mathematics and AI Competence] — Where Mathematics Meets Innovation & AI!</p>
-    </div>
+  <!-- Marquee -->
+  <div class="greeting-marquee">
+    <p>🌟 Welcome to SUNMAC [Strategic Upgrade Network for Mathematics and AI Competence] — Where Mathematics Meets Innovation & AI!</p>
+  </div>
 
-    <div class="hero-content">
-      <h2>Empowering<br>Mathematics and<br>AI Competence</h2>
-      <p>Building the future of learning with intelligent tools.</p>
-      <div class="cta-buttons">
-        <a href="{% url 'signup' %}">
-          <button class="btn-student">Try Student AI</button>
-        </a>
-        <a href="{% url 'signup' %}">
-          <button class="btn-teacher">Explore Teacher Tools</button>
-        </a>
-      </div>
+  <!-- Combined Hero + Welcome Section -->
+ <div class="hero-combined" id="home">
+  <div class="hero-left">
+    <h2>Empowering<br>Mathematics and<br>AI Competence</h2>
+    <p>Building the future of learning with intelligent tools.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'signup' %}"><button class="btn-student">Try Student AI</button></a>
+      <a href="{% url 'signup' %}"><button class="btn-teacher">Explore Teacher Tools</button></a>
     </div>
   </div>
 
-  <!-- Home Section -->
-  <section class="about glowing-box" id="home">
+  <div class="hero-right">
     <h2>Welcome to SUNMAC</h2>
-    <p>
-      <strong>SUNMAC</strong> is your gateway to a transformative experience in mathematics and AI-enhanced education. <br><br>
-      From personalized student support to innovative tools for teachers, SUNMAC equips every learner and educator with the power of technology. <br><br>
-      Step into a smarter future — where mathematics is visual, interactive, and powered by intelligent systems.
-    </p>
-  </section>
+    <p><strong>SUNMAC</strong> is your gateway to a transformative experience in mathematics and AI-enhanced education.</p>
+    <p>From personalized student support to innovative tools for teachers, SUNMAC equips every learner and educator with the power of technology.</p>
+    <p>Step into a smarter future — where mathematics is visual, interactive, and powered by intelligent systems.</p>
+  </div>
+</div>
 
   <!-- Info Cards -->
   <section class="info-section">
+    <div class="section-wrapper">
     <div class="info-card">
       <h3>Transforming Math Education</h3>
       <p class="justified-text">SUNMAC bridges the gap between learning and teaching mathematics across digital environments.</p>
@@ -75,20 +71,23 @@
       <h3>SUNMAC MISSION</h3>
       <p class="justified-text">Our mission is to democratize access to quality STEM education worldwide.</p>
     </div>
+  </div>
   </section>
-
   <!-- About Section -->
   <section id="about" class="about glowing-box">
+    <div class="section-wrapper">
     <h2>About SUNMAC</h2>
     <p>
       <strong>SUNMAC (Strategic Upgrade Network for Mathematics and AI Competence)</strong> is revolutionizing the way the world experiences mathematics.<br><br>
       We go beyond textbooks — we fuse the power of Artificial Intelligence with human curiosity to make math not just understandable, but unforgettable.<br><br>
       Whether you're a student seeking clarity, a teacher designing impact, or a school shaping the future — SUNMAC is your intelligent partner in the journey of discovery.
     </p>
+  </div>
   </section>
 
   <!-- Services Section -->
   <section class="services" id="services">
+    <div class="section-wrapper">
     <h2>Our Services</h2>
     <div class="service-cards">
       <div class="card">
@@ -107,23 +106,69 @@
         <p class="justified-text">Track student progress and identify gaps.</p>
       </div>
     </div>
+  </div>
   </section>
 
-  <!-- Explore Tools Section -->
-  <section class="tools" id="tools">
+   <!-- Explore Tools Section -->
+<!-- Explore Tools Section -->
+<section class="tools" id="tools">
+  <div class="section-wrapper">
     <h2>Explore Tools</h2>
-    <div class="tool-buttons">
-      <a href="{% url 'student_tools' %}">
-        <button class="btn-student">Try Student Tools</button>
-      </a>
-      <a href="{% url 'teacher_tools' %}">
-        <button class="btn-teacher">Explore Teacher Tools</button>
-      </a>
-    </div>
-  </section>
+    <div class="tool-cards">
 
+      <!-- Student Tools -->
+      <div class="tool-card">
+        <h3>🧮 Try Student Tools</h3>
+        <p>Access interactive AI-powered solvers and personalized feedback for every math problem.</p>
+        <a href="{% url 'student_tools' %}">
+          <button class="btn-student">Launch Student Tools</button>
+        </a>
+      </div>
+
+      <!-- Teacher Tools -->
+      <div class="tool-card">
+        <h3>👩‍🏫 Explore Teacher Tools</h3>
+        <p>Create engaging lessons, track learner progress, and get smart recommendations for teaching.</p>
+        <a href="{% url 'teacher_tools' %}">
+          <button class="btn-teacher">Launch Teacher Tools</button>
+        </a>
+      </div>
+
+      <!-- YouTube Lessons -->
+      <div class="tool-card">
+        <h3>🎥 Watch Related YouTube Lessons</h3>
+        <p>If your question matches an already solved topic on YouTube, we’ll show the best video for visual learning.</p>
+        <a href="#youtube-results">
+          <button style="background: #f44336; color: white;">Watch on YouTube</button>
+        </a>
+      </div>
+
+      <!-- Live Class Booking -->
+      <div class="tool-card">
+        <h3>📅 Book a Live Class</h3>
+        <p>Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.</p>
+        <a href="#live-class">
+          <button style="background: #4caf50; color: white;">Book Now</button>
+        </a>
+      </div>
+      <div class="tool-card">
+  <h3>🧠 Interactive Math Games</h3>
+  <p>Learn while playing — engage with interactive games that make math fun and intuitive.</p>
+  <button class="student">Play Now</button>
+</div>
+
+<div class="tool-card">
+  <h3>📄 Downloadable Worksheets</h3>
+  <p>Practice offline with high-quality worksheets aligned to your curriculum.</p>
+  <button class="teacher">Download</button>
+</div>
+
+    </div>
+  </div>
+</section>
   <!-- Sign Up Section -->
   <section class="signup-section" id="signup">
+    <div class="section-wrapper">
     <h2>Sign Up</h2>
     <form class="signup-form">
       <input type="text" placeholder="Full Name" required />
@@ -131,9 +176,11 @@
       <input type="password" placeholder="Password" required />
       <button type="submit">Register</button>
     </form>
+  </div>
   </section>
 
   <!-- Contact Section -->
+   <div class="section-wrapper">
   <section class="about" id="contact">
     <div class="container">
       <h2>Contact Us</h2>
@@ -148,6 +195,7 @@
         </a>
       </p>
     </div>
+  </div>
   </section>
 
   <!-- Footer -->

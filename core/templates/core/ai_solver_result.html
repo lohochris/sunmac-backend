@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Solver Result – SUNMAC</title>
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  <script src="{% static 'core/js/youtube.js' %}" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">S</div>
+    <h1 class="brand">SUNMAC</h1>
+    <nav>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="#tools">Explore Tools</a>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="signup">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}"><button class="signup">Login</button></a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <div class="ai-book-container" style="margin-top: 120px;">
+    <div class="ai-title">AI-Powered Math Solver</div>
+
+    <div class="ai-book-page">
+      <div class="ai-question">
+        {{ question }}
+      </div>
+
+      <div class="solution-text">
+        {{ solution }}
+      </div>
+    </div>
+
+    <div id="youtube-results" class="youtube-results-section">
+      <h3 style="color: #1a237e; margin-top: 40px;">📺 Related YouTube Videos</h3>
+      <p>Loading recommendations...</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 SUNMAC. All rights reserved. | Powered by <strong>INFORTECHMATICS</strong>
+  </footer>
+
+  <script>
+    // Run YouTube search when the page loads
+    document.addEventListener("DOMContentLoaded", () => {
+      const questionText = `{{ question|escapejs }}`;
+      fetchYouTubeVideos(questionText);
+    });
+  </script>
+
+</body>
+</html>
