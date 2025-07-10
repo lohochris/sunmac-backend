@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from PIL import Image, UnidentifiedImageError
 import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -142,14 +143,29 @@ def student_solution_view(request):
 @login_required
 @csrf_exempt
 def teacher_tools(request):
-    result = None
-    topic = ''
     if request.method == 'POST':
-        topic = request.POST.get('topic')
-        result = generate_teaching_guide(topic)
-    return render(request, 'core/teacher_tools.html', {
-        'result': result,
-        'topic': topic
+        ai_question = request.POST.get('question')
+        if ai_question:
+            ai_answer = generate_teaching_guide(ai_question)
+            request.session['teacher_question'] = ai_question
+            request.session['teacher_result'] = ai_answer
+            return redirect('teacher_solution')
+
+    return render(request, 'core/teacher_tools.html')
+
+
+@login_required
+def teacher_solution_view(request):
+    question = request.session.get('teacher_question')
+    result = request.session.get('teacher_result')
+
+    if not question or not result:
+        messages.error(request, "No recent teaching aid to display.")
+        return redirect('teacher_tools')
+
+    return render(request, 'core/teacher_solution.html', {
+        'question': question,
+        'result': result
     })
 
 # ============================ Together AI Logic ============================

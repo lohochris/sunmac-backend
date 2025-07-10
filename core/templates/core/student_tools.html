@@ -1,7 +1,10 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block content %}
-<script src="{% static 'core/js/youtube.js' %}"></script>
+
+<section class="section-wrapper">
+  <script src="{% static 'core/js/youtube.js' %}"></script>
+
   <h2>🎓 Student AI Tools</h2>
   <p>Upload a handwritten math question or type your math problem below. SUNMAC AI will solve it step-by-step.</p>
 
@@ -15,32 +18,33 @@
 
     <button type="submit">Solve</button>
   </form>
+</section>
 
-  {% if result %}
-    <div class="ai-book-container">
-      <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
+{% if result %}
+  <section class="ai-book-container">
+    <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
 
-      <div class="ai-book-page" id="book-content">
-        <div class="ai-question">
-          <strong>Question:</strong><br>
-          {{ question }}
-        </div>
-        <div class="solution-text">
-          {{ result|linebreaks }}
-        </div>
+    <div class="ai-book-page" id="book-content">
+      <div class="ai-question">
+        <strong>Question:</strong><br>
+        {{ question }}
       </div>
-
-      <button class="print-button" onclick="printBook()">🖨️ Print / Save as PDF</button>
+      <div class="solution-text">
+        {{ result|linebreaks }}
+      </div>
     </div>
-  {% endif %}
 
-  <!-- MathJax for LaTeX -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+    <button class="print-button" onclick="printBook()">🖨️ Print / Save as PDF</button>
+  </section>
+{% endif %}
 
-  <!-- Print Script -->
+<!-- MathJax for LaTeX -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<!-- Print Script -->
 <script>
   function printBook() {
     const content = document.getElementById('book-content').innerHTML;
@@ -63,4 +67,5 @@
     printWindow.print();
   }
 </script>
+
 {% endblock %}

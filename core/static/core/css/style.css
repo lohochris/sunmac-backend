@@ -213,7 +213,7 @@ nav a:hover { color: #ffd600; }
   justify-content: center;
 }
 
-.tool-cards {
+.tool-cards{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
@@ -252,6 +252,45 @@ nav a:hover { color: #ffd600; }
 
 .tool-card:hover {
   transform: translateY(-5px);
+}
+
+/* === Responsive Card Grid Layout for Services & Tools === */
+.service-cards,
+.tool-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+/* === Shared Card Style for Tools and Services === */
+.service .cards {
+  background: rgba(255, 255, 255, 0.96);
+  border-left: 6px solid #1a237e;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.service .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.service .cards h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #1a237e;
+}
+
+.service .cards p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  text-align: justify;
 }
 
 
