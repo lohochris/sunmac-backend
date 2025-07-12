@@ -1,0 +1,100 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="ai-book-container">
+  <h2 class="ai-title" style="text-align: center;">🧠 Interactive Math Game</h2>
+
+  <div class="ai-book-page" style="max-width: 500px; margin: auto;">
+
+    <div style="text-align: center; margin-bottom: 10px;">
+      <p style="font-size: 16px;"><strong>Stage {{ stage }} of 10</strong></p>
+      <p style="font-size: 16px;">⏱️ Time Remaining: <span id="timer" style="color: red;">{{ timer }}</span> seconds</p>
+      {% if score %}
+        <p style="font-size: 16px;">🏆 Score: <strong>{{ score }}</strong></p>
+      {% endif %}
+    </div>
+
+    <form method="post" style="text-align: center;">
+      {% csrf_token %}
+      <div style="margin-bottom: 20px;">
+        <strong style="font-size: 18px;">Solve: {{ question }}</strong>
+      </div>
+
+      <input type="hidden" name="question" value="{{ question }}">
+      <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+      <input type="hidden" name="stage" value="{{ stage }}">
+      <input type="text" name="answer" placeholder="Enter your answer..." style="padding: 10px; width: 60%; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;" required>
+      <br><br>
+      <button type="submit" class="book-button">Submit</button>
+    </form>
+
+    {% if result %}
+      <div class="ai-solution" style="margin-top: 25px; text-align: center;">
+        <p style="font-size: 18px; font-weight: bold; color: {% if 'Correct' in result %}green{% else %}red{% endif %};">
+          {{ result }}
+        </p>
+      </div>
+    {% endif %}
+
+    <div style="text-align: center; margin-top: 20px;">
+      <form method="post" action="{% url 'reset_score' %}">
+        {% csrf_token %}
+        <button type="submit" class="book-button" style="background-color: #b90000;">🔁 Reset Score</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .book-button {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .book-button:hover {
+    background-color: #388e3c;
+  }
+
+  .ai-book-container {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ai-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .ai-book-page {
+    background-color: #fff;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.06);
+  }
+</style>
+
+<script>
+  let timeLeft = {{ timer }};
+  const timerDisplay = document.getElementById('timer');
+
+  const countdown = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(countdown);
+      timerDisplay.innerText = "⏰ Time's up!";
+    } else {
+      timerDisplay.innerText = timeLeft;
+    }
+  }, 1000);
+</script>
+{% endblock %}
