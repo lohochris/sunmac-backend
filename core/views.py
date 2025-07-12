@@ -13,8 +13,9 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.views import LoginView
-
 from .models import Profile, QueryLog
+from .forms import LiveClassBookingForm  
+from .models import LiveClassBooking   
 
 # ✅ Load environment variables
 load_dotenv()
@@ -70,6 +71,8 @@ class RoleBasedLoginView(LoginView):
             return reverse('dashboard')
 
 
+from .models import LiveClassBooking  # Ensure this is imported at the top
+
 @login_required
 def dashboard_view(request):
     try:
@@ -79,13 +82,15 @@ def dashboard_view(request):
 
     last_query = QueryLog.objects.filter(user=request.user).order_by('-timestamp').first()
 
+    # Fetch user's booked live classes
+    booked_classes = LiveClassBooking.objects.filter(user=request.user).order_by('date', 'time')
+
     return render(request, 'core/dashboard.html', {
         'role': role,
         'question': last_query.query if last_query else None,
         'solution': last_query.result if last_query else None,
+        'booked_classes': booked_classes,  # Pass it to the template
     })
-
-
 @login_required
 def student_dashboard(request):
     return redirect('student_tools')
@@ -168,6 +173,24 @@ def teacher_solution_view(request):
         'result': result
     })
 
+@login_required
+def book_class_view(request):
+    if request.method == 'POST':
+        form = LiveClassBookingForm(request.POST)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.user = request.user
+            booking.save()
+            messages.success(request, 'Your live class has been booked successfully!')
+            return redirect('dashboard')
+    else:
+        form = LiveClassBookingForm()
+    return render(request, 'core/book_class.html', {'form': form})
+
+
+@login_required
+def youtube_explore(request):
+    return render(request, 'core/youtube_explore.html')
 # ============================ Together AI Logic ============================
 
 def solve_math_step_by_step(question):

@@ -1,0 +1,136 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="ai-book-container">
+  <h2 class="ai-title">📅 Book a Live Class</h2>
+
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li style="color: green; font-weight: bold;">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <p class="booking-intro">
+    Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.
+  </p>
+
+  <div class="ai-book-page">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="errorlist">{{ field.errors.as_text|linebreaksbr }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="book-button">Book Now</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .ai-book-container {
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: auto;
+    background-color: #fdfdfd;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+  }
+
+  .ai-title {
+    text-align: center;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .booking-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+    color: #555;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .ai-book-page {
+    max-width: 500px;
+    margin: 30px auto 10px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .book-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  .book-button:hover {
+    background-color: #45a049;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+    color: #222;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    color: #222;
+    background-color: #f9f9f9;
+  }
+
+  .errorlist {
+    color: #d00;
+    font-size: 14px;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .messages {
+    margin-top: 15px;
+    padding-left: 0;
+    list-style-type: none;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 600px) {
+    .ai-book-page {
+      padding: 15px;
+    }
+
+    .book-button {
+      font-size: 15px;
+    }
+  }
+</style>
+{% endblock %}

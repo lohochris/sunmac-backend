@@ -30,6 +30,8 @@ urlpatterns = [
     path('dashboard/', dashboard_view, name='dashboard'),
     path('student/dashboard/', student_dashboard, name='student_dashboard'),
     path('teacher/dashboard/', teacher_dashboard, name='teacher_dashboard'),
+    path('explore/youtube/', views.youtube_explore, name='youtube_explore'),
+    path('book-class/', views.book_class_view, name='book_class'),
 
     # AI Tools
     path('student/tools/', student_tools, name='student_tools'),

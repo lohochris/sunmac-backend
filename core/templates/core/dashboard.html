@@ -43,7 +43,129 @@
       </div>
     {% endif %}
 
-    <p><a href="{% url 'logout' %}">Logout</a></p>
+    <!-- 🔍 Explore Tools Section -->
+    <div class="section-wrapper">
+      <h2>Explore Tools</h2>
+      <div class="tool-cards">
+
+        <a href="{% url 'student_tools' %}">
+          <div class="tool-card">
+            <h3>Try Student AI Tools</h3>
+            <p>Upload handwritten or typed questions for step-by-step AI solutions.</p>
+            <button>Explore</button>
+          </div>
+        </a>
+
+        <a href="{% url 'teacher_tools' %}">
+          <div class="tool-card">
+            <h3>Explore Teacher Tools</h3>
+            <p>Generate guided explanations and class aids powered by AI.</p>
+            <button>Explore</button>
+          </div>
+        </a>
+
+        <a href="{% url 'student_tools' %}#youtube-results">
+          <div class="tool-card">
+            <h3>YouTube Video Suggestions</h3>
+            <p>Get related tutorials from YouTube based on your math question.</p>
+            <button>Explore</button>
+          </div>
+        </a>
+
+       <div class="tool-card" onclick="location.href='{% url 'book_class' %}'" style="cursor: pointer;">
+  <h3>Book a Live Class</h3>
+  <p>Connect with certified tutors for one-on-one or group sessions.</p>
+  <button>Book Now</button>
+</div>
+      </div>
+    </div>
+
+    <p style="margin-top: 30px;"><a href="{% url 'logout' %}">Logout</a></p>
   </div>
 
+  {% if booked_classes %}
+<section class="dashboard-section booked-classes-wrapper">
+  <h3 class="dashboard-subtitle">📅 Your Booked Live Classes</h3>
+
+  <div class="table-container">
+    <table class="booked-table">
+      <thead>
+        <tr>
+          <th>Topic</th>
+          <th>Date</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for class in booked_classes %}
+        <tr>
+          <td>{{ class.topic }}</td>
+          <td>{{ class.date }}</td>
+          <td>{{ class.time }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<style>
+  .booked-classes-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.92); /* Light semi-transparent background */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .dashboard-subtitle {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 20px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .booked-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .booked-table th {
+    background-color: #f5f5f5;
+    color: #333;
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .booked-table td {
+    text-align: center;
+    padding: 12px;
+    font-size: 15px;
+    color: #333;
+    border-top: 1px solid #ddd;
+  }
+
+  .booked-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  @media screen and (max-width: 600px) {
+    .booked-table th,
+    .booked-table td {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+</style>
+{% endif %}
 {% endblock %}

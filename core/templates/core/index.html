@@ -160,22 +160,25 @@
       </div>
 
       <!-- YouTube Lessons -->
-      <div class="tool-card">
-        <h3>🎥 Watch Related YouTube Lessons</h3>
-        <p>If your question matches an already solved topic on YouTube, we’ll show the best video for visual learning.</p>
-        <a href="#youtube-results">
-          <button style="background: #f44336; color: white;">Watch on YouTube</button>
-        </a>
-      </div>
+       <div class="tool-card youtube-card">
+  <h3>📺 Watch Related Lessons</h3>
+  <p>Get related tutorials from YouTube based on your math question.</p>
+  <button class="youtube-btn" onclick="window.location.href='{% url 'youtube_explore' %}'">
+    <img src="{% static 'core/images/youtube-icon.png' %}" alt="YouTube" class="youtube-icon">
+    Watch on YouTube
+  </button>
+</div>
+
 
       <!-- Live Class Booking -->
-      <div class="tool-card">
-        <h3>📅 Book a Live Class</h3>
-        <p>Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.</p>
-        <a href="#live-class">
-          <button style="background: #4caf50; color: white;">Book Now</button>
-        </a>
-      </div>
+<div class="tool-card">
+  <h3>📅 Book a Live Class</h3>
+  <p>Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.</p>
+  <a href="{% url 'book_class' %}">
+    <button style="background: #4caf50; color: white;">Book Now</button>
+  </a>
+</div>
+
       <div class="tool-card">
   <h3>🧠 Interactive Math Games</h3>
   <p>Learn while playing — engage with interactive games that make math fun and intuitive.</p>

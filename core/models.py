@@ -22,3 +22,15 @@ class QueryLog(models.Model):
 
     def __str__(self):
         return f"Query by {self.user.username} at {self.timestamp.strftime('%Y-%m-%d %H:%M:%S')}"
+
+# Booking Model for Live Classes
+class LiveClassBooking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=200)
+    date = models.DateField()
+    time = models.TimeField()
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.topic} on {self.date} at {self.time}"
+
