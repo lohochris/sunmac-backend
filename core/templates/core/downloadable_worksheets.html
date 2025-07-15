@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% load static tz %}
+
+{% block content %}
+<div class="worksheet-container" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+  <h2 style="text-align: center; color: #003366;">📄 Your AI Worksheets</h2>
+
+  {% if user_worksheet %}
+    <div style="overflow-x: auto;">
+      <table class="worksheet-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr style="background-color: #f0f0f0; color: #003366; font-weight: bold; font-size: 1.1rem;">
+            <th style="padding: 12px;">Topic</th>
+            <th style="padding: 12px;">Date</th>
+            <th style="padding: 12px;">Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="word-wrap: break-word;">
+              {{ request.session.question|truncatechars:50|default:"Latest Worksheet" }}
+            </td>
+            <td>
+              {{ request.session.worksheet_time|default:"N/A" }}
+            </td>
+            <td>
+              <a href="{{ user_worksheet }}" download style="background-color: white; padding: 4px; border-radius: 5px;">
+                <img src="{% static 'core/images/download-icon.png' %}" alt="Download" width="24">
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="text-align: center;">No generated worksheet yet.</p>
+  {% endif %}
+
+  <h3 class="mt-4" style="margin-top: 2rem; text-align: center; color: #003366;">🧠 Related Worksheets</h3>
+
+  {% if related_worksheets %}
+    <div style="overflow-x: auto;">
+      <table class="worksheet-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr style="background-color: #f0f0f0; color: #003366; font-weight: bold; font-size: 1.1rem;">
+            <th style="padding: 12px;">Topic</th>
+            <th style="padding: 12px;">File</th>
+            <th style="padding: 12px;">Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in related_worksheets %}
+            {% with file_name=file|cut:".pdf" %}
+              <tr>
+                <td style="word-wrap: break-word;">{{ file_name|slice:"-50:" }}</td>
+                <td style="word-wrap: break-word;">{{ file_name }}</td>
+                <td>
+                  <a href="{{ file }}" download style="background-color: white; padding: 4px; border-radius: 5px;">
+                    <img src="{% static 'core/images/download-icon.png' %}" alt="Download" width="24">
+                  </a>
+                </td>
+              </tr>
+            {% endwith %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="text-align: center;">No related worksheets found.</p>
+  {% endif %}
+</div>
+{% endblock %}

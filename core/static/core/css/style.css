@@ -66,7 +66,12 @@ section {
   margin: 40px auto;
   border-radius: 16px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(6px);
+  .transparent-blur {
+  background-color: rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
+}
+
   color: #1a237e;
 }
 
@@ -330,13 +335,29 @@ nav a:hover { color: #ffd600; }
 
 
 /* Dashboard */
-.dashboard-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 30px;
-  background: #f5faff;
-  border-radius: 10px;
+.dashboard-section {
+  background-color: #f9f9f9;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
+
+.dashboard-container h1 {
+  color: #003366; /* Dark Blue for visibility */
+  font-weight: bold;
+}
+
+.dashboard-container p {
+  color: #333;  /* Dark Gray */
+  font-size: 16px;
+}
+.dashboard-container a:hover {
+  text-decoration: underline;
+  color: #1a237e;
+}
+
 
 /* Login Form */
 .login-section {

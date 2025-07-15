@@ -17,8 +17,9 @@
       <a href="#">Home</a>
       <a href="#about">About</a>
       <a href="#services">Services</a>
-      <a href="#contact">Contact</a>
       <a href="#tools">Explore Tools</a>
+      <a href="#contact">Contact</a>
+      
 
       {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}" style="display:inline;">
@@ -136,63 +137,81 @@
 </section>
  
 <!-- Explore Tools Section -->
+<!-- Explore Tools Section -->
 <section class="tools" id="tools">
   <div class="section-wrapper">
     <h2>Explore Tools</h2>
     <div class="tool-cards">
 
+      <!-- My Dashboard (replaces Assignments/Progress) -->
+      <a href="{% url 'dashboard' %}">
+        <div class="tool-card">
+          <h3>🧑‍🎓 My Dashboard</h3>
+          <p>Access your AI tools, assignments, progress, and personalized content in one place.</p>
+          <button style="background-color: #003366; color: white;">Open Dashboard</button>
+        </div>
+      </a>
+
       <!-- Student Tools -->
-      <div class="tool-card">
-        <h3>🧮 Try Student Tools</h3>
-        <p>Access interactive AI-powered solvers and personalized feedback for every math problem.</p>
-        <a href="{% url 'student_tools' %}">
+      <a href="{% url 'student_tools' %}">
+        <div class="tool-card">
+          <h3>🧮 Try Student Tools</h3>
+          <p>Upload your math questions and get instant AI-powered step-by-step solutions.</p>
           <button class="btn-student">Launch Student Tools</button>
-        </a>
-      </div>
+        </div>
+      </a>
 
       <!-- Teacher Tools -->
-      <div class="tool-card">
-        <h3>👩‍🏫 Explore Teacher Tools</h3>
-        <p>Create engaging lessons, track learner progress, and get smart recommendations for teaching.</p>
-        <a href="{% url 'teacher_tools' %}">
-          <button class="btn-teacher">Launch Teacher Tools</button>
-        </a>
-      </div>
+      <a href="{% url 'teacher_tools' %}">
+        <div class="tool-card">
+          <h3>👩‍🏫 Explore Teacher Tools</h3>
+          <p>Create assignments, generate solutions, and track student learning insights.</p>
+          <button style="background-color: #003366; color: white;">Launch Teacher Tools</button>
+        </div>
+      </a>
 
-      <!-- YouTube Lessons -->
-       <div class="tool-card youtube-card">
-  <h3>📺 Watch Related Lessons</h3>
-  <p>Get related tutorials from YouTube based on your math question.</p>
-  <button class="youtube-btn" onclick="window.location.href='{% url 'youtube_explore' %}'">
-    <img src="{% static 'core/images/youtube-icon.png' %}" alt="YouTube" class="youtube-icon">
-    Watch on YouTube
-  </button>
-</div>
+      <!-- 🎓 Student Opportunities -->
+<a href="{% url 'student_opportunities' %}">
+  <div class="tool-card">
+    <h3>🎓 Scholarships & Internships</h3>
+    <p>Find the latest scholarship opportunities and internships tailored for students.</p>
+    <button style="background-color: #4caf50; color: white;">Explore Now</button>
+  </div>
+</a>
+
+<!-- 🚀 Teacher Growth -->
+<a href="{% url 'teacher_opportunities' %}">
+  <div class="tool-card">
+    <h3>🚀 Sponsorship & Career Growth</h3>
+    <p>Discover fellowships, grants, and opportunities for career advancement.</p>
+    <button style="background-color: #4caf50; color: white;">See Opportunities</button>
+  </div>
+</a>
 
 
-      <!-- Live Class Booking -->
-<div class="tool-card">
-  <h3>📅 Book a Live Class</h3>
-  <p>Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.</p>
-  <a href="{% url 'book_class' %}">
-    <button style="background: #4caf50; color: white;">Book Now</button>
-  </a>
-</div>
+     <!-- Live Class Booking -->
+      <a href="{% url 'book_class' %}">
+        <div class="tool-card">
+          <h3>📅 Book a Live Class</h3>
+          <p>Schedule one-on-one or group sessions with expert tutors for deeper understanding.</p>
+          <button style="background: #4caf50; color: white;">Book Now</button>
+        </div>
+      </a>
 
-      <div class="tool-card">
-  <h3>🧠 Interactive Math Games</h3>
-  <p>Learn while playing — engage with interactive games that make math fun and intuitive.</p>
-  <button class="student">Play Now</button>
-</div>
-
-<div class="tool-card">
-  <h3>📄 Downloadable Worksheets</h3>
-  <p>Practice offline with high-quality worksheets aligned to your curriculum.</p>
-  <button class="teacher">Download</button>
-</div>
+      <!-- Downloadable Worksheets -->
+      <a href="{% url 'worksheet_list' %}">
+        <div class="tool-card">
+          <h3>📄 Downloadable Worksheets</h3>
+          <p>Practice with printable worksheets tailored to your curriculum.</p>
+          
+          <button style="background-color: #003366; color: white;">View Worksheets</button>
+        </div>
+      </a>
 
     </div>
   </div>
+</section>
+
 </section>
   <!-- Sign Up Section -->
   <section class="signup-section" id="signup">

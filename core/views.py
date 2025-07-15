@@ -1,8 +1,16 @@
+from django.utils import timezone
+from core.utils import latex_to_readable
+from django.utils.text import slugify
+from xhtml2pdf import pisa
+from reportlab.lib.units import inch
+from core.utils import sanitize_filename, latex_to_readable 
+import mimetypes
+from django.http import FileResponse, Http404
+from django.conf import settings
 import os
 from random import randint, choice
 from dotenv import load_dotenv
 from PIL import Image, UnidentifiedImageError
-
 from django import forms
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -13,12 +21,28 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 from .models import Profile, QueryLog, LiveClassBooking
 from .forms import LiveClassBookingForm
 import pytesseract
 
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.units import inch
+from reportlab.lib.enums import TA_CENTER
+
+from .utils import sanitize_filename  # make sure this helper exists
+
+
 from .models import MathGameResult
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
+from io import BytesIO
+import re
+def sanitize_filename(text):
+    return re.sub(r'[^\w\-_. ]', '_', text.lower())[:50]
 # ✅ OCR setup
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
@@ -32,6 +56,17 @@ client = OpenAI(
     base_url="https://api.together.xyz/v1"
 )
 
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+def generate_pdf(request, question, solution):
+    html = render_to_string("core/pdf_template.html", {
+        'question': question,
+        'solution': solution
+    })
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="worksheet.pdf"'
+    pisa.CreatePDF(html, dest=response)
+    return response
 # ============================ Forms ============================
 
 class CustomUserCreationForm(UserCreationForm):
@@ -62,8 +97,11 @@ class RoleBasedLoginView(LoginView):
     template_name = 'core/login.html'
 
     def get_success_url(self):
+        user = self.request.user
+        if user.is_superuser:
+            return reverse('dashboard')
         try:
-            role = self.request.user.profile.role
+            role = user.profile.role
             if role == 'student':
                 return reverse('student_dashboard')
             elif role == 'teacher':
@@ -75,16 +113,42 @@ class RoleBasedLoginView(LoginView):
 
 @login_required
 def dashboard_view(request):
-    role = getattr(request.user.profile, 'role', None)
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user, role='student')
+
+    role = profile.role
     last_query = QueryLog.objects.filter(user=request.user).order_by('-timestamp').first()
     booked_classes = LiveClassBooking.objects.filter(user=request.user).order_by('date', 'time')
+
+    # ✅ Get user's generated worksheet
+    user_worksheet = request.session.get('worksheet_download_link')
+
+    # ✅ Dynamically get related PDFs using Together AI keyword extraction
+    related_files = []
+    if last_query:
+        keywords = extract_keywords_with_together_ai(last_query.query)
+        matched_filenames = match_related_pdfs_from_keywords(keywords)
+        related_files = [f"{settings.MEDIA_URL}worksheets/related/{f}" for f in matched_filenames]
 
     return render(request, 'core/dashboard.html', {
         'role': role,
         'question': last_query.query if last_query else None,
         'solution': last_query.result if last_query else None,
         'booked_classes': booked_classes,
+        'user_worksheet': user_worksheet,
+        'related_worksheets': related_files,
     })
+
+
+@login_required
+def student_opportunities_view(request):
+    return render(request, 'core/student_opportunities.html')
+
+@login_required
+def teacher_opportunities_view(request):
+    return render(request, 'core/teacher_opportunities.html')
 
 @login_required
 def student_dashboard(request):
@@ -132,11 +196,50 @@ def student_solution_view(request):
         messages.error(request, "No recent solution to display.")
         return redirect('student_tools')
 
+    # Convert LaTeX to readable format
+    question = latex_to_readable(question)
+    result = latex_to_readable(result)
+
+    filename = f"{sanitize_filename(question)}.pdf"
+    pdf_path = os.path.join('worksheets', 'generated', filename)
+    filepath = os.path.join(settings.MEDIA_ROOT, pdf_path)
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+    if not os.path.exists(filepath):
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4,
+                                rightMargin=40, leftMargin=40,
+                                topMargin=60, bottomMargin=40)
+
+        styles = getSampleStyleSheet()
+        centered_style = ParagraphStyle(
+            'Center',
+            parent=styles['Normal'],
+            alignment=TA_CENTER,
+            fontSize=12,
+            leading=18,
+            spaceAfter=10
+        )
+
+        story = [Paragraph(f"<b>Question:</b> {question}", centered_style), Spacer(1, 0.2 * inch)]
+        for line in result.split('\n'):
+            story.append(Paragraph(line.strip(), centered_style))
+
+        doc.build(story)
+
+        with open(filepath, 'wb') as f:
+            f.write(buffer.getvalue())
+
+    download_link = os.path.join(settings.MEDIA_URL, pdf_path)
+    request.session['worksheet_download_link'] = download_link
+    request.session['worksheet_time'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+
     return render(request, 'core/student_solution.html', {
         'question': question,
-        'result': result
+        'result': result,
+        'user_worksheet': download_link
     })
-
+    
 @login_required
 @csrf_exempt
 def teacher_tools(request):
@@ -159,11 +262,42 @@ def teacher_solution_view(request):
         messages.error(request, "No recent teaching aid to display.")
         return redirect('teacher_tools')
 
+    # Convert LaTeX to readable
+    question = latex_to_readable(question)
+    result = latex_to_readable(result)
+
+    filename = f"teacher_{slugify(question[:50])}.pdf"
+    pdf_path = os.path.join('worksheets', 'generated', filename)
+    full_path = os.path.join(settings.MEDIA_ROOT, pdf_path)
+
+    if not os.path.exists(full_path):
+        html = render_to_string("core/pdf_template.html", {
+            'question': question,
+            'solution': result
+        })
+        with open(full_path, "wb") as f:
+            pisa.CreatePDF(src=html, dest=f)
+
+    download_link = os.path.join(settings.MEDIA_URL, pdf_path)
+    request.session['worksheet_download_link'] = download_link
+    request.session['worksheet_time'] = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    related_files = []
+    related_path = os.path.join(settings.MEDIA_ROOT, 'worksheets', 'related')
+    if os.path.exists(related_path):
+        for f in os.listdir(related_path):
+            if f.endswith('.pdf'):
+                related_files.append({
+                    'url': f"{settings.MEDIA_URL}worksheets/related/{f}",
+                    'name': f.replace('.pdf', '')
+                })
+
     return render(request, 'core/teacher_solution.html', {
         'question': question,
-        'result': result
+        'result': result,
+        'user_worksheet': download_link,
+        'related_worksheets': related_files[:5]
     })
-
 # ============================ Booking & Extra Tools ============================
 
 @login_required
@@ -221,6 +355,25 @@ def ai_solver_result(request):
         'solution': solution
     })
 
+@login_required
+def worksheet_list_view(request):
+    user_worksheet = request.session.get('worksheet_download_link')
+
+    related_path = os.path.join(settings.MEDIA_ROOT, 'worksheets/related')
+    related_files = [f"{settings.MEDIA_URL}worksheets/related/{f}" for f in os.listdir(related_path) if f.endswith('.pdf')][:5]
+
+    return render(request, 'core/downloadable_worksheets.html', {
+        'user_worksheet': user_worksheet,
+        'related_worksheets': related_files,
+    })
+    
+@login_required
+def view_assignments(request):
+    return render(request, 'core/view_assignments.html')
+
+@login_required
+def track_progress(request):
+    return render(request, 'core/track_progress.html')
 # ============================ AI Processing ============================
 
 def solve_math_step_by_step(question):
@@ -402,3 +555,50 @@ def math_leaderboard_view(request):
     )
 
     return render(request, 'core/leaderboard.html', {'leaderboard': leaderboard})
+@login_required
+def download_worksheet(request, filename):
+    filepath = os.path.join(settings.MEDIA_ROOT, 'worksheets', filename)
+    if not os.path.exists(filepath):
+        raise Http404("Worksheet not found.")
+    
+    file_mimetype, _ = mimetypes.guess_type(filepath)
+    return FileResponse(open(filepath, 'rb'), content_type=file_mimetype or 'application/octet-stream')
+
+
+def extract_keywords_with_together_ai(prompt):
+    try:
+        response = client.chat.completions.create(
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an assistant that extracts concise, useful topic keywords from student math questions. Return 3–5 keywords in a comma-separated format."
+                },
+                {
+                    "role": "user",
+                    "content": f"Extract keywords from: {prompt}"
+                }
+            ],
+            temperature=0.2,
+            max_tokens=50,
+        )
+        keyword_text = response.choices[0].message.content.strip()
+        keywords = [kw.strip().lower() for kw in keyword_text.split(',') if kw.strip()]
+        return keywords
+    except Exception as e:
+        print("❌ Keyword extraction failed:", str(e))
+        return []
+
+def match_related_pdfs_from_keywords(keywords):
+    related_dir = os.path.join(settings.MEDIA_ROOT, 'worksheets', 'related')
+    available_files = os.listdir(related_dir)
+
+    matched = []
+    for file in available_files:
+        filename_lower = file.lower()
+        for kw in keywords:
+            if kw in filename_lower and file not in matched:
+                matched.append(file)
+                break  # avoid duplicates
+
+    return matched[:5]

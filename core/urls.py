@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 from .views import (
     signup_view, dashboard_view, RoleBasedLoginView,
@@ -32,6 +34,16 @@ urlpatterns = [
     path('teacher/dashboard/', teacher_dashboard, name='teacher_dashboard'),
     path('explore/youtube/', views.youtube_explore, name='youtube_explore'),
     path('book-class/', views.book_class_view, name='book_class'),
+    path('math-games/', views.math_games_view, name='math_games'),
+    path('math-games/reset/', views.reset_score, name='reset_score'),
+    path('math-leaderboard/', views.math_leaderboard_view, name='math_leaderboard'),
+    path('download/worksheet/<str:filename>/', views.download_worksheet, name='download_worksheet'),
+    path('worksheets/', views.worksheet_list_view, name='worksheet_list'),
+    path('assignments/', views.view_assignments, name='view_assignments'),
+    path('progress/', views.track_progress, name='track_progress'),
+    path('student-opportunities/', views.student_opportunities_view, name='student_opportunities'),
+    path('teacher-opportunities/', views.teacher_opportunities_view, name='teacher_opportunities'),
+
 
     # AI Tools
     path('student/tools/', student_tools, name='student_tools'),
@@ -39,3 +51,5 @@ urlpatterns = [
     path('teacher/tools/', teacher_tools, name='teacher_tools'),
     path('teacher-solution/', views.teacher_solution_view, name='teacher_solution'),
 ]
+
+

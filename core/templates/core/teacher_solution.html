@@ -1,4 +1,6 @@
 {% extends "core/base.html" %}
+{% load static %}
+
 {% block content %}
 <section class="ai-book-container">
   <div class="ai-title">📘 AI Teaching Aid</div>
@@ -11,4 +13,56 @@
     </div>
   </div>
 </section>
+
+<section class="youtube-section">
+  <h3 class="youtube-title" style="text-align: center;">🎥 Related YouTube Videos</h3>
+  <div id="youtube-results" class="youtube-container"></div>
+</section>
+
+<!-- ✅ Load YouTube Script -->
+<script src="{% static 'core/js/youtube.js' %}"></script>
+
+<!-- ✅ Call YouTube Fetch After DOM Loads -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const teacherQuery = `{{ question|escapejs }}`;
+    fetchYouTubeVideos(teacherQuery);
+  });
+</script>
+
+<!-- ✅ Worksheet Download & Related Files Section -->
+<div class="dashboard-tile" style="padding: 2rem; margin-top: 2rem;">
+  <h4 style="color: #003366; margin-bottom: 1rem;">📄 Downloadable Worksheet</h4>
+  
+  {% if user_worksheet %}
+    <a href="{{ user_worksheet }}" 
+       class="btn btn-primary" 
+       download 
+       style="display: inline-block; background-color: white; padding: 10px 16px; border-radius: 6px; color: #003366; font-weight: bold; text-decoration: none; margin-bottom: 1rem;">
+       
+      <img src="{% static 'core/images/download-icon.png' %}" 
+           width="20" 
+           style="vertical-align: middle; margin-right: 8px;">
+      Download Your AI Guide
+    </a>
+  {% else %}
+    <p>No recent AI-generated worksheet available.</p>
+  {% endif %}
+</div>
+
+  <h5 style="margin-top: 2rem; color: #003366;">📚 Related Teaching Aids</h5>
+  {% if related_worksheets %}
+    <ul style="list-style: none; padding-left: 0;">
+      {% for file in related_worksheets %}
+        <li style="margin-bottom: 10px;">
+          <a href="{{ file.url }}" download style="text-decoration: none; color: #003366;">
+            📥 {{ file.name|slice:"-50:" }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No related PDFs found.</p>
+  {% endif %}
+</div>
 {% endblock %}
