@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: sunmac
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn sunmac.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value: your_secret_key
+      - key: OPENAI_API_KEY
+        value: your_openai_key
+      - key: DEBUG
+        value: False
