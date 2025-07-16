@@ -6,22 +6,22 @@ Welcome to the backend of **SUNMAC** – a Django-based educational platform des
 
 ## 🚀 Features
 
-- 🎓 **Student Tools** – Upload handwritten math problems or type questions to get instant AI-powered step-by-step solutions.
-- 👩‍🏫 **Teacher Tools** – Explore insights and tools to assist in instruction, assessment, and student support.
-- 📘 **Digital Solution Book** – Solutions are presented in a book-like interface for better learning experience.
-- 📄 **PDF Print Option** – Easily save or print math solutions for offline study.
-- 🔒 **Secure Authentication** – User sign up, login, logout with session protection.
-- 🧠 **AI Integration** – Powered by GPT to solve equations and explain math concepts clearly.
-  
+* 🎓 **Student Tools** – Upload handwritten math problems or type questions to get instant AI-powered step-by-step solutions.
+* 👩‍🏫 **Teacher Tools** – Explore insights and tools to assist in instruction, assessment, and student support.
+* 📚 **Digital Solution Book** – Solutions are presented in a book-like interface for better learning experience.
+* 📄 **PDF Print Option** – Easily save or print math solutions for offline study.
+* 🔒 **Secure Authentication** – User sign up, login, logout with session protection.
+* 🧠 **AI Integration** – Powered by GPT to solve equations and explain math concepts clearly.
+
 ---
 
-## 🛠️ Technologies Used
+## 💠 Technologies Used
 
-- **Backend Framework**: Django (Python)
-- **Frontend Integration**: HTML, CSS, JavaScript
-- **AI Integration**: OpenAI GPT (via API)
-- **Styling**: Custom responsive CSS with book-styled layouts
-- **Database**: SQLite (development)
+* **Backend Framework**: Django (Python)
+* **Frontend Integration**: HTML, CSS, JavaScript
+* **AI Integration**: OpenAI GPT (via API)
+* **Styling**: Custom responsive CSS with book-styled layouts
+* **Database**: SQLite (development)
 
 ---
 
@@ -37,32 +37,49 @@ sunmac_backend/
 │
 ├── manage.py                # Django entry point
 └── requirements.txt         # Python dependencies
+```
 
-🚦 How to Run the Project
-1. Clone the Repository
+---
+
+## 🚦 How to Run the Project
+
+```bash
+# 1. Clone the Repository
 git clone https://github.com/lohochris/sunmac-backend.git
 cd sunmac-backend
 
-2. Create a Virtual Environment
+# 2. Create a Virtual Environment
 python -m venv env
 source env/bin/activate  # or `env\Scripts\activate` on Windows
 
-3. Install Dependencies
+# 3. Install Dependencies
 pip install -r requirements.txt
 
-4. Run the Server
+# 4. Run the Server
 python manage.py migrate
 python manage.py runserver
+```
 
-Visit http://127.0.0.1:8000/ in your browser.
+Visit [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser.
 
-📸 Screenshots
-Student AI Tool	Digital Solution Book
-Upload/Type Math	View Beautiful Step-by-Step Results
+---
 
-📬 Contribution & Feedback
+## 📸 Screenshots
+
+* **Student AI Tool**
+* **Digital Solution Book**
+* **Upload/Type Math**
+* **View Beautiful Step-by-Step Results**
+
+---
+
+## 📬 Contribution & Feedback
+
 If you have suggestions, ideas, or bug reports, please open an issue or submit a pull request.
 
-📄 License
+---
+
+## 📄 License
+
 This project is licensed under the MIT License.
-Created by Loho Christopher with passion for smart, AI-driven education.
+Created by **Loho Christopher** with passion for smart, AI-driven education.
