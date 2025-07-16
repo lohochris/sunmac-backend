@@ -14,7 +14,13 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-bo6&1-s=m0kz5$#*r*us35uz&7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['sunmac.onrender.com']
+ALLOWED_HOSTS = ['sunmac.onrender.com, www.sunmac.onrender.com']
+
+CSRF_TRUSTED_ORIGINS = ['https://sunmac.onrender.com']
+
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SECURE = False
 
 # Application definition
 INSTALLED_APPS = [
