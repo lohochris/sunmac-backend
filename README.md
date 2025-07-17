@@ -3,6 +3,11 @@
 Welcome to the backend of **SUNMAC** – a Django-based educational platform designed to provide intelligent math assistance to students and teachers. SUNMAC delivers AI-powered step-by-step math solutions, personalized dashboards, and easy-to-use interfaces for educators and learners.
 
 ---
+## 🎥 Project Showcase
+
+- 🔗 **Live Demo**: [https://sunmac.onrender.com](https://sunmac.onrender.com)
+- 📽️ **Demo Video**: [Watch on Loom](https://www.loom.com/share/2c3af638a9844399b5ea37161cec2ada?t=184&sid=ab2db3b8-fdc2-4286-84df-a85d2c02e181)
+- 💼 **LinkedIn Post**: [View on LinkedIn](https://www.linkedin.com/posts/lohochristopher_i%E1%B9%A3%E1%BA%B9-%E1%BA%B9k%E1%BB%8D-p%E1%BA%B9lu-ai-%C3%A0w%E1%BB%8Dn-%E1%BA%B9r%E1%BB%8D-t%C3%B3-n-r%C3%A0n-wa-activity-7351623962365243392-e2TQ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxnqMgB8P_RnbZGyx2LBYOvf-hVoXbb2XM)
 
 ## 🚀 Features
 
