@@ -79,6 +79,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 # ============================ Authentication Views ============================
 
+ # Signup View: Redirect to login after registration
 def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -86,12 +87,14 @@ def signup_view(request):
             user = form.save()
             role = form.cleaned_data['role']
             Profile.objects.create(user=user, role=role)
-            messages.success(request, 'Account created successfully!')
+
+            # ✅ Success message for login page
+            messages.success(request, 'Account created successfully! Please log in to continue.')
+
             return redirect('login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'core/signup.html', {'form': form})
-
 
 class RoleBasedLoginView(LoginView):
     template_name = 'core/login.html'
@@ -99,7 +102,8 @@ class RoleBasedLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
         if user.is_superuser:
-            return reverse('dashboard')
+            return reverse('dashboard')  # Admin dashboard
+
         try:
             role = user.profile.role
             if role == 'student':
@@ -107,7 +111,9 @@ class RoleBasedLoginView(LoginView):
             elif role == 'teacher':
                 return reverse('teacher_dashboard')
         except Profile.DoesNotExist:
-            return reverse('dashboard')
+            return reverse('dashboard')  # Fallback
+
+        return reverse('dashboard')
 
 # ============================ Dashboard & Tool Views ============================
 

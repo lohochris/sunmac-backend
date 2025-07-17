@@ -6,3 +6,5 @@ class CoreConfig(AppConfig):
 
     def ready(self):
         import core.signals  # This line is required to activate the signal
+
+

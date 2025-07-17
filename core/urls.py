@@ -19,8 +19,13 @@ urlpatterns = [
 
     # Authentication
     path('signup/', signup_view, name='signup'),
-    path('accounts/login/', RoleBasedLoginView.as_view(), name='login'),
-    path('accounts/logout/', LogoutView.as_view(next_page='home'), name='logout'),
+    path('accounts/login/', RoleBasedLoginView.as_view()),  # fallback
+    path('login/', RoleBasedLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
+    path('accounts/logout/', LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
+
+
+
 
     # Password Reset
     path('reset_password/', PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='reset_password'),
