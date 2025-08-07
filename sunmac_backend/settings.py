@@ -17,7 +17,9 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'sunmac.onrender.com, www.sunmac.onrender.com']
+    'sunmac.onrender.com',
+    'www.sunmac.onrender.com'
+]
 
 CSRF_TRUSTED_ORIGINS = ['https://sunmac.onrender.com']
 
