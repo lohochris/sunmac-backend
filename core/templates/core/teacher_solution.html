@@ -2,67 +2,748 @@
 {% load static %}
 
 {% block content %}
-<section class="ai-book-container">
-  <div class="ai-title">📘 AI Teaching Aid</div>
-  <div class="ai-book-page">
-    <div class="ai-question">
-      <strong>Question:</strong><br>{{ question }}
-    </div>
-    <div class="solution-text">
-      <strong>Teaching Aid:</strong><br>{{ result }}
+<style>
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
+  }
+
+  /* Main Container */
+  .teacher-solution {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: var(--primary-gradient);
+    border-radius: var(--border-radius);
+    padding: 50px 40px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .hero-title i {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.95);
+    line-height: 1.6;
+  }
+
+  /* Teaching Aid Card */
+  .teaching-aid {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease 0.1s both;
+  }
+
+  .aid-header {
+    background: var(--primary-gradient);
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .aid-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .aid-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .aid-action-btn {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  .aid-action-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .aid-content {
+    padding: 35px;
+  }
+
+  .aid-question {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border-left: 4px solid #667eea;
+  }
+
+  .aid-question strong {
+    color: #667eea;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .aid-question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+  }
+
+  .aid-solution {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 16px;
+  }
+
+  .aid-solution strong {
+    color: #28a745;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .aid-solution-text {
+    line-height: 1.8;
+    color: #34495e;
+    font-size: 1rem;
+  }
+
+  .aid-solution-text p {
+    margin-bottom: 15px;
+  }
+
+  /* YouTube Section */
+  .youtube-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 35px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  .youtube-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .youtube-header h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: var(--secondary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .youtube-header p {
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+
+  .youtube-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
+
+  .youtube-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .youtube-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .youtube-thumbnail {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .youtube-info {
+    padding: 15px;
+  }
+
+  .youtube-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .youtube-channel {
+    font-size: 0.85rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Resources Section */
+  .resources-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 35px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 0.6s ease 0.3s both;
+  }
+
+  .resources-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+  }
+
+  .resources-header h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .worksheet-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .worksheet-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gradient);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+  }
+
+  .worksheet-icon i {
+    width: 30px;
+    height: 30px;
+    color: white;
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+  }
+
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .related-item {
+    padding: 15px;
+    border-bottom: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+
+  .related-item:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+  }
+
+  .related-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #1a1a2e;
+  }
+
+  .related-link i {
+    color: #667eea;
+    width: 20px;
+    height: 20px;
+  }
+
+  .related-info {
+    flex: 1;
+  }
+
+  .related-name {
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .related-meta {
+    font-size: 0.75rem;
+    color: #6c757d;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+    animation: slideInRight 0.3s ease;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .toast-success {
+    border-left: 4px solid #28a745;
+  }
+
+  .toast-success i {
+    color: #28a745;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 30px 25px;
+    }
+    
+    .hero-title {
+      font-size: 1.8rem;
+    }
+    
+    .aid-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .aid-content {
+      padding: 20px;
+    }
+    
+    .youtube-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Print Styles */
+  @media print {
+    .hero-section,
+    .aid-actions,
+    .youtube-section,
+    .resources-section {
+      display: none;
+    }
+    
+    .teaching-aid {
+      box-shadow: none;
+      margin: 0;
+    }
+    
+    .aid-content {
+      padding: 0;
+    }
+  }
+</style>
+
+<div class="teacher-solution">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-title">
+        <i data-lucide="chalkboard"></i>
+        <span>Teaching Aid Generated</span>
+      </div>
+      <div class="hero-subtitle">
+        Your AI-powered teaching resource is ready. Download, print, or share with your students.
+      </div>
     </div>
   </div>
-</section>
 
-<section class="youtube-section">
-  <h3 class="youtube-title" style="text-align: center;">🎥 Related YouTube Videos</h3>
-  <div id="youtube-results" class="youtube-container"></div>
-</section>
+  <!-- Teaching Aid Card -->
+  <div class="teaching-aid" id="teachingAid">
+    <div class="aid-header">
+      <h2>
+        <i data-lucide="book-open"></i>
+        AI Teaching Aid
+      </h2>
+      <div class="aid-actions">
+        <button class="aid-action-btn" onclick="copyToClipboard()">
+          <i data-lucide="copy"></i>
+          Copy
+        </button>
+        <button class="aid-action-btn" onclick="printTeachingAid()">
+          <i data-lucide="printer"></i>
+          Print
+        </button>
+      </div>
+    </div>
+    
+    <div class="aid-content" id="aidContent">
+      <div class="aid-question">
+        <strong>
+          <i data-lucide="help-circle"></i>
+          Topic / Question
+        </strong>
+        <div class="aid-question-text">
+          {{ question|linebreaks }}
+        </div>
+      </div>
 
-<!-- ✅ Load YouTube Script -->
+      <div class="aid-solution">
+        <strong>
+          <i data-lucide="lightbulb"></i>
+          Teaching Guide & Explanation
+        </strong>
+        <div class="aid-solution-text">
+          {{ result|linebreaks }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube Section -->
+  <div class="youtube-section">
+    <div class="youtube-header">
+      <h3>
+        <i data-lucide="youtube"></i>
+        Related Video Resources
+      </h3>
+      <p>Hand-picked tutorials to enhance your teaching</p>
+    </div>
+    <div id="youtube-results" class="youtube-grid">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: #6c757d;">Loading video recommendations...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resources Section -->
+  <div class="resources-section">
+    <div class="resources-header">
+      <i data-lucide="folder-open"></i>
+      <h4>Teaching Resources</h4>
+    </div>
+
+    <!-- Worksheet Download -->
+    <div class="worksheet-card">
+      <div class="worksheet-icon">
+        <i data-lucide="file-text"></i>
+      </div>
+      <h5 style="margin-bottom: 10px; color: #1a1a2e;">Downloadable Worksheet</h5>
+      {% if user_worksheet %}
+        <a href="{{ user_worksheet }}" class="download-btn" download>
+          <i data-lucide="download"></i>
+          Download AI Teaching Guide
+        </a>
+      {% else %}
+        <p style="color: #6c757d;">No recent AI-generated worksheet available.</p>
+      {% endif %}
+    </div>
+
+    <!-- Related Teaching Aids -->
+    <h5 style="margin-bottom: 15px; color: #1a1a2e; display: flex; align-items: center; gap: 8px;">
+      <i data-lucide="book-marked"></i>
+      Related Teaching Aids
+    </h5>
+    
+    {% if related_worksheets %}
+      <ul class="related-list">
+        {% for file in related_worksheets %}
+          <li class="related-item">
+            <a href="{{ file.url }}" class="related-link" download>
+              <i data-lucide="file-pdf"></i>
+              <div class="related-info">
+                <div class="related-name">{{ file.name|slice:"-50:" }}</div>
+                <div class="related-meta">PDF Document</div>
+              </div>
+              <i data-lucide="download" style="width: 16px; height: 16px;"></i>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty-state">
+        <i data-lucide="folder"></i>
+        <p>No related teaching aids found.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- YouTube Script -->
 <script src="{% static 'core/js/youtube.js' %}"></script>
 
-<!-- ✅ Call YouTube Fetch After DOM Loads -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Copy to clipboard
+  function copyToClipboard() {
+    const content = document.getElementById('aidContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      showToast('Teaching aid copied to clipboard!', 'success');
+    }).catch(() => {
+      showToast('Failed to copy', 'error');
+    });
+  }
+
+  // Print teaching aid
+  function printTeachingAid() {
+    const content = document.getElementById('teachingAid').cloneNode(true);
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>SUNMAC AI Teaching Aid</title>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+          }
+          .header h1 {
+            color: #667eea;
+            margin: 0;
+          }
+          .aid-question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+          }
+          .aid-solution {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SUNMAC AI Teaching Aid</h1>
+          <p>Generated on ${new Date().toLocaleDateString()}</p>
+        </div>
+        ${content.querySelector('.aid-content').innerHTML}
+        <div class="footer">
+          <p>Powered by SUNMAC Advanced AI Technology</p>
+        </div>
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  // Toast notification
+  function showToast(message, type) {
+    const existingToasts = document.querySelectorAll('.toast');
+    existingToasts.forEach(toast => toast.remove());
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+      <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  // Load YouTube videos
+  document.addEventListener('DOMContentLoaded', function() {
     const teacherQuery = `{{ question|escapejs }}`;
-    fetchYouTubeVideos(teacherQuery);
+    if (typeof fetchYouTubeVideos === 'function') {
+      fetchYouTubeVideos(teacherQuery);
+    } else {
+      console.error('fetchYouTubeVideos is not defined');
+      const container = document.getElementById('youtube-results');
+      if (container) {
+        container.innerHTML = '<p style="text-align: center; color: #dc3545;">Unable to load video recommendations</p>';
+      }
+    }
   });
 </script>
-
-<!-- ✅ Worksheet Download & Related Files Section -->
-<div class="dashboard-tile" style="padding: 2rem; margin-top: 2rem;">
-  <h4 style="color: #003366; margin-bottom: 1rem;">📄 Downloadable Worksheet</h4>
-  
-  {% if user_worksheet %}
-    <a href="{{ user_worksheet }}" 
-       class="btn btn-primary" 
-       download 
-       style="display: inline-block; background-color: white; padding: 10px 16px; border-radius: 6px; color: #003366; font-weight: bold; text-decoration: none; margin-bottom: 1rem;">
-       
-      <img src="{% static 'core/images/download-icon.png' %}" 
-           width="20" 
-           style="vertical-align: middle; margin-right: 8px;">
-      Download Your AI Guide
-    </a>
-  {% else %}
-    <p>No recent AI-generated worksheet available.</p>
-  {% endif %}
-</div>
-
-  <h5 style="margin-top: 2rem; color: #003366;">📚 Related Teaching Aids</h5>
-  {% if related_worksheets %}
-    <ul style="list-style: none; padding-left: 0;">
-      {% for file in related_worksheets %}
-        <li style="margin-bottom: 10px;">
-          <a href="{{ file.url }}" download style="text-decoration: none; color: #003366;">
-            📥 {{ file.name|slice:"-50:" }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No related PDFs found.</p>
-  {% endif %}
-</div>
 {% endblock %}

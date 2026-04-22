@@ -4,252 +4,894 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SUNMAC</title>
+  <meta name="description" content="SUNMAC - Strategic Upgrade Network for Mathematics and AI Competence. Empowering mathematics education with AI.">
+  <meta name="keywords" content="AI Math Solver, Mathematics Education, AI Learning, STEM">
+  <meta name="author" content="INFORTECHMATICS">
+  <title>SUNMAC - AI Powered Mathematics Education</title>
   <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ========== CSS RESET & VARIABLES ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #4338ca;
+      --primary-light: #818cf8;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --dark: #0f172a;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #94a3b8;
+      --border-radius: 20px;
+      --border-radius-sm: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ========== NAVBAR ========== */
+    .navbar {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 45px;
+      height: 45px;
+      background: var(--gradient-primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .brand {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-left: 10px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .signup-btn {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ========== HERO SECTION WITH CAROUSEL ========== */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      padding: 4rem 5%;
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+
+    .hero-content {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+      color: white;
+      max-width: 600px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-outline:hover {
+      background: white;
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Carousel */
+    .hero-carousel {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+      height: 400px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .carousel-slides {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+      border-radius: var(--border-radius);
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 3;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: white;
+      width: 25px;
+      border-radius: 10px;
+    }
+
+    /* ========== MARQUEE ========== */
+    .marquee {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 0.8rem;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* ========== SECTION STYLES ========== */
+    .section {
+      padding: 5rem 8%;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    .section-header p {
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* About Grid */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text p {
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+      text-align: justify;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      color: var(--gray);
+      margin-top: 0.5rem;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .service-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .service-icon i {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+
+    .service-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .service-card p {
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .tool-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+      display: block;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .tool-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-card p {
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-btn {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: var(--gradient-primary);
+      text-align: center;
+      padding: 4rem 8%;
+      margin: 2rem 8%;
+      border-radius: var(--border-radius);
+    }
+
+    .cta-section h2 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2rem;
+    }
+
+    .btn-white {
+      background: white;
+      color: var(--primary);
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Contact Section */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.3s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .contact-icon i {
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
+
+    .contact-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .contact-card a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--dark);
+      color: var(--gray-light);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+      }
+      
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .contact-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+      
+      .section {
+        padding: 3rem 5%;
+      }
+      
+      .hero-carousel {
+        width: 100%;
+        height: 250px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-   <!-- Navbar -->
-  <header class="navbar">
+<!-- Navbar -->
+<header class="navbar">
+  <div style="display: flex; align-items: center;">
     <div class="logo">S</div>
-    <h1 class="brand">SUNMAC</h1>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#tools">Explore Tools</a>
-      <a href="#contact">Contact</a>
-      
-
-      {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit" class="signup">Logout</button>
-        </form>
-      {% else %}
-        <a href="{% url 'login' %}"><button class="signup">Login</button></a>
-        <a href="{% url 'signup' %}"><button class="signup">Sign Up</button></a>
-      {% endif %}
-    </nav>
-  </header>
-
-  <!-- Marquee -->
-  <div class="greeting-marquee">
-    <p>🌟 Welcome to SUNMAC [Strategic Upgrade Network for Mathematics and AI Competence] — Where Mathematics Meets Innovation & AI!</p>
+    <span class="brand">SUNMAC</span>
   </div>
-
-  <!-- Combined Hero + Welcome Section -->
- <div class="hero-combined" id="home">
-  <div class="hero-left">
-    <h2>Empowering<br>Mathematics and<br>AI Competence</h2>
-    <p>Building the future of learning with intelligent tools.</p>
-    <div class="cta-buttons">
-      <a href="{% url 'signup' %}"><button class="btn-student">Try Student AI</button></a>
-      <a href="{% url 'signup' %}"><button class="btn-teacher">Explore Teacher Tools</button></a>
-    </div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#tools">Explore Tools</a>
+    <a href="#contact">Contact</a>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button class="signup-btn" type="submit">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}"><button class="signup-btn">Login</button></a>
+      <a href="{% url 'signup' %}"><button class="signup-btn">Sign Up</button></a>
+    {% endif %}
   </div>
+</header>
 
-  <div class="hero-right">
-    <h2>Welcome to SUNMAC</h2>
-    <p><strong>SUNMAC</strong> is your gateway to a transformative experience in mathematics and AI-enhanced education.</p>
-    <p>From personalized student support to innovative tools for teachers, SUNMAC equips every learner and educator with the power of technology.</p>
-    <p>Step into a smarter future — where mathematics is visual, interactive, and powered by intelligent systems.</p>
+<!-- Marquee -->
+<div class="marquee">
+  <div class="marquee-content">
+    Welcome to SUNMAC — Strategic Upgrade Network for Mathematics and AI Competence — Where Mathematics Meets Innovation & AI
   </div>
 </div>
 
-  <!-- Info Cards -->
-  <section class="info-section">
-    <div class="section-wrapper">
-    <div class="info-card">
-      <h3>Transforming Math Education</h3>
-      <p class="justified-text">SUNMAC bridges the gap between learning and teaching mathematics across digital environments.</p>
-    </div>
-    <div class="info-card">
-      <h3 class="big">50+</h3>
-      <p class="justified-text">Interactive learning modules</p>
-    </div>
-    <div class="info-card">
-      <h3>SUNMAC MISSION</h3>
-      <p class="justified-text">Our mission is to democratize access to quality STEM education worldwide.</p>
+<!-- Hero Section with Carousel -->
+<section class="hero" id="home">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">AI-Powered Learning Platform</div>
+    <h1>Empowering Mathematics & AI Competence</h1>
+    <p>Building the future of learning with intelligent tools. Experience the next generation of mathematics education powered by artificial intelligence.</p>
+    <div class="cta-group">
+      <a href="{% url 'signup' %}" class="btn-primary">
+        <i data-lucide="rocket"></i> Get Started
+      </a>
+      <a href="#about" class="btn-outline">
+        <i data-lucide="book-open"></i> Learn More
+      </a>
     </div>
   </div>
-  </section>
-  <!-- About Section -->
-  <section id="about" class="about glowing-box">
-    <div class="section-wrapper">
+  <div class="hero-carousel">
+    <div class="carousel-slides" id="carouselSlides">
+     <div class="carousel-slides" id="carouselSlides">
+  <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop');"></div>
+  <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop');"></div>
+  <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop');"></div>
+  <div class="carousel-slide" style="background-image: url('https://media.istockphoto.com/id/2166782274/photo/students-on-painting-on-classroom-at-school.webp?w=800&h=500&fit=crop');"></div>
+  <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop');"></div>
+</div>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="section" id="about">
+  <div class="section-header">
     <h2>About SUNMAC</h2>
-    <p>
-      <strong>SUNMAC (Strategic Upgrade Network for Mathematics and AI Competence)</strong> is revolutionizing the way the world experiences mathematics.<br><br>
-      We go beyond textbooks — we fuse the power of Artificial Intelligence with human curiosity to make math not just understandable, but unforgettable.<br><br>
-      Whether you're a student seeking clarity, a teacher designing impact, or a school shaping the future — SUNMAC is your intelligent partner in the journey of discovery.
-    </p>
+    <p>Revolutionizing mathematics education through AI innovation</p>
   </div>
-  </section>
+  <div class="about-grid">
+    <div class="about-text">
+      <p><strong>SUNMAC (Strategic Upgrade Network for Mathematics and AI Competence)</strong> is revolutionizing the way the world experiences mathematics.</p>
+      <p>We go beyond textbooks. We fuse the power of Artificial Intelligence with human curiosity to make math not just understandable, but unforgettable.</p>
+      <p>Whether you are a student seeking clarity, a teacher designing impact, or a school shaping the future, SUNMAC is your intelligent partner in the journey of discovery.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-number">10,000+</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">98%</div>
+        <div class="stat-label">Satisfaction Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">AI Support</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">50+</div>
+        <div class="stat-label">Topics Covered</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <!-- Services Section -->
-  <section class="services" id="services">
-  <div class="section-wrapper">
+<!-- Services Section -->
+<section class="section" id="services" style="background: #f1f5f9;">
+  <div class="section-header">
     <h2>Our Services</h2>
-    <div class="service-cards">
-      <div class="card">
-        <h3>AI Step-by-Step Solver</h3>
-        <p class="justified-text">
-          Instantly solve math problems with clear, step-by-step AI explanations.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Curriculum Support</h3>
-        <p class="justified-text">
-          Aligned with WAEC, NECO, IGCSE, SAT, and other global standards for personalized study.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Performance Analytics</h3>
-        <p class="justified-text">
-          Get real-time insights on student progress, topic mastery, and learning gaps.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Smart Revision Engine</h3>
-        <p class="justified-text">
-          Personalized revision suggestions based on user weaknesses and question history.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>AI-Powered Exam Prep</h3>
-        <p class="justified-text">
-          Automatically generate timed mock exams with instant marking and explanations.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Teacher Collaboration Tools</h3>
-        <p class="justified-text">
-          Teachers can upload, track, and manage student tasks, plus analyze classroom performance.
-        </p>
-      </div>
+    <p>Comprehensive solutions for students and educators</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="bot"></i></div>
+      <h3>AI Step-by-Step Solver</h3>
+      <p>Instantly solve math problems with clear, step-by-step AI explanations.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="book"></i></div>
+      <h3>Curriculum Support</h3>
+      <p>Aligned with WAEC, NECO, IGCSE, SAT, and other global standards.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="bar-chart-3"></i></div>
+      <h3>Performance Analytics</h3>
+      <p>Real-time insights on student progress and learning gaps.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="brain"></i></div>
+      <h3>Smart Revision Engine</h3>
+      <p>Personalized revision based on weaknesses and history.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="clipboard-check"></i></div>
+      <h3>AI-Powered Exam Prep</h3>
+      <p>Automatically generate timed mock exams with instant marking.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><i data-lucide="users"></i></div>
+      <h3>Teacher Collaboration</h3>
+      <p>Upload, track, and manage student tasks and performance.</p>
     </div>
   </div>
 </section>
- 
-<!-- Explore Tools Section -->
-<!-- Explore Tools Section -->
-<section class="tools" id="tools">
-  <div class="section-wrapper">
+
+<!-- Tools Section -->
+<section class="section" id="tools">
+  <div class="section-header">
     <h2>Explore Tools</h2>
-    <div class="tool-cards">
-
-      <!-- My Dashboard (replaces Assignments/Progress) -->
-      <a href="{% url 'dashboard' %}">
-        <div class="tool-card">
-          <h3>🧑‍🎓 My Dashboard</h3>
-          <p>Access your AI tools, assignments, progress, and personalized content in one place.</p>
-          <button style="background-color: #003366; color: white;">Open Dashboard</button>
-        </div>
-      </a>
-
-      <!-- Student Tools -->
-      <a href="{% url 'student_tools' %}">
-        <div class="tool-card">
-          <h3>🧮 Try Student Tools</h3>
-          <p>Upload your math questions and get instant AI-powered step-by-step solutions.</p>
-          <button class="btn-student">Launch Student Tools</button>
-        </div>
-      </a>
-
-      <!-- Teacher Tools -->
-      <a href="{% url 'teacher_tools' %}">
-        <div class="tool-card">
-          <h3>👩‍🏫 Explore Teacher Tools</h3>
-          <p>Create assignments, generate solutions, and track student learning insights.</p>
-          <button style="background-color: #003366; color: white;">Launch Teacher Tools</button>
-        </div>
-      </a>
-
-      <!-- 🎓 Student Opportunities -->
-<a href="{% url 'student_opportunities' %}">
-  <div class="tool-card">
-    <h3>🎓 Scholarships & Internships</h3>
-    <p>Find the latest scholarship opportunities and internships tailored for students.</p>
-    <button style="background-color: #4caf50; color: white;">Explore Now</button>
+    <p>Powerful AI-driven tools for every learning need</p>
   </div>
-</a>
-
-<!-- 🚀 Teacher Growth -->
-<a href="{% url 'teacher_opportunities' %}">
-  <div class="tool-card">
-    <h3>🚀 Sponsorship & Career Growth</h3>
-    <p>Discover fellowships, grants, and opportunities for career advancement.</p>
-    <button style="background-color: #4caf50; color: white;">See Opportunities</button>
+  <div class="tools-grid">
+    <a href="{% url 'dashboard' %}" class="tool-card">
+      <h3><i data-lucide="layout-dashboard"></i> My Dashboard</h3>
+      <p>Access your AI tools, assignments, and progress in one place.</p>
+      <button class="tool-btn">Open Dashboard <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'student_tools' %}" class="tool-card">
+      <h3><i data-lucide="calculator"></i> Student Tools</h3>
+      <p>Upload math questions and get instant AI solutions.</p>
+      <button class="tool-btn">Launch Student Tools <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'teacher_tools' %}" class="tool-card">
+      <h3><i data-lucide="chalkboard"></i> Teacher Tools</h3>
+      <p>Create assignments and track student insights.</p>
+      <button class="tool-btn">Launch Teacher Tools <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'student_opportunities' %}" class="tool-card">
+      <h3><i data-lucide="graduation-cap"></i> Scholarships</h3>
+      <p>Find scholarships and internships tailored for students.</p>
+      <button class="tool-btn">Explore Now <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'teacher_opportunities' %}" class="tool-card">
+      <h3><i data-lucide="rocket"></i> Career Growth</h3>
+      <p>Discover fellowships and grants for career advancement.</p>
+      <button class="tool-btn">See Opportunities <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'book_class' %}" class="tool-card">
+      <h3><i data-lucide="calendar"></i> Live Classes</h3>
+      <p>Schedule one-on-one sessions with expert tutors.</p>
+      <button class="tool-btn">Book Now <i data-lucide="arrow-right"></i></button>
+    </a>
+    <a href="{% url 'worksheet_list' %}" class="tool-card">
+      <h3><i data-lucide="file-text"></i> Worksheets</h3>
+      <p>Practice with printable worksheets.</p>
+      <button class="tool-btn">View Worksheets <i data-lucide="arrow-right"></i></button>
+    </a>
   </div>
-</a>
+</section>
 
+<!-- CTA Section -->
+<div class="cta-section">
+  <h2>Ready to Transform Your Learning?</h2>
+  <p>Join thousands of students and teachers using SUNMAC to achieve more.</p>
+  <a href="{% url 'signup' %}"><button class="btn-white">Get Started Free <i data-lucide="arrow-right"></i></button></a>
+</div>
 
-     <!-- Live Class Booking -->
-      <a href="{% url 'book_class' %}">
-        <div class="tool-card">
-          <h3>📅 Book a Live Class</h3>
-          <p>Schedule one-on-one or group sessions with expert tutors for deeper understanding.</p>
-          <button style="background: #4caf50; color: white;">Book Now</button>
-        </div>
-      </a>
-
-      <!-- Downloadable Worksheets -->
-      <a href="{% url 'worksheet_list' %}">
-        <div class="tool-card">
-          <h3>📄 Downloadable Worksheets</h3>
-          <p>Practice with printable worksheets tailored to your curriculum.</p>
-          
-          <button style="background-color: #003366; color: white;">View Worksheets</button>
-        </div>
-      </a>
-
+<!-- Contact Section -->
+<section class="section" id="contact">
+  <div class="section-header">
+    <h2>Contact Us</h2>
+    <p>Get in touch with our team</p>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-icon"><i data-lucide="mail"></i></div>
+      <h3>Email</h3>
+      <a href="mailto:lohoinfortech@gmail.com">lohoinfortech@gmail.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon"><i data-lucide="phone"></i></div>
+      <h3>WhatsApp</h3>
+      <a href="https://wa.me/2348173714727" target="_blank">+234 817 371 4727</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-icon"><i data-lucide="linkedin"></i></div>
+      <h3>LinkedIn</h3>
+      <a href="https://www.linkedin.com/in/lohochristopher/" target="_blank">Loho Christopher</a>
     </div>
   </div>
 </section>
 
-</section>
-  <!-- Sign Up Section -->
-  <section class="signup-section" id="signup">
-    <div class="section-wrapper">
-    <h2>Sign Up</h2>
-    <form class="signup-form">
-      <input type="text" placeholder="Full Name" required />
-      <input type="email" placeholder="Email Address" required />
-      <input type="password" placeholder="Password" required />
-      <button type="submit">Register</button>
-    </form>
-  </div>
-  </section>
+<!-- Footer -->
+<footer class="footer">
+  <p>&copy; 2025 SUNMAC. All rights reserved. Designed for intelligent learning.</p>
+  <p>Developed by <strong>INFORTECHMATICS</strong> | Crafted with vision by <strong>Loho Christopher</strong></p>
+</footer>
 
-  <!-- Contact Section -->
-   <div class="section-wrapper">
-  <section class="about" id="contact">
-    <div class="container">
-      <h2>Contact Us</h2>
-      <p>Email: <a href="mailto:lohoinfortech@gmail.com">lohoinfortech@gmail.com</a></p>
-      <p>WhatsApp: 
-        <a href="https://wa.me/2348173714727" target="_blank">+234 817 371 4727</a> |
-        <a href="https://wa.me/23826000659" target="_blank">+23481 260 00659</a>
-      </p>
-      <p>LinkedIn: 
-        <a href="https://www.linkedin.com/in/lohochristopher/" target="_blank">
-          Loho Christopher
-        </a>
-      </p>
-    </div>
-  </div>
-  </section>
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 SUNMAC. All rights reserved. | Designed for intelligent learning.<br />
-    Developed by <strong>INFORTECHMATICS</strong> | Crafted with vision by <strong>Loho Christopher</strong>.
-  </footer> 
+  // Hero Carousel Functionality
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dotsContainer = document.getElementById('carouselDots');
+  let currentSlide = 0;
+  let slideInterval;
+
+  // Create dots
+  slides.forEach((_, index) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if (index === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(index));
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll('.dot');
+
+  function goToSlide(index) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = index;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+
+  function nextSlide() {
+    let next = currentSlide + 1;
+    if (next >= slides.length) next = 0;
+    goToSlide(next);
+  }
+
+  // Auto-advance slides every 5 seconds
+  function startCarousel() {
+    slideInterval = setInterval(nextSlide, 5000);
+  }
+
+  function stopCarousel() {
+    clearInterval(slideInterval);
+  }
+
+  startCarousel();
+
+  // Pause on hover
+  const carousel = document.querySelector('.hero-carousel');
+  carousel.addEventListener('mouseenter', stopCarousel);
+  carousel.addEventListener('mouseleave', startCarousel);
+</script>
 
 </body>
 </html>

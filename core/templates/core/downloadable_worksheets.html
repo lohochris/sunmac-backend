@@ -2,30 +2,285 @@
 {% load static tz %}
 
 {% block content %}
-<div class="worksheet-container" style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-  <h2 style="text-align: center; color: #003366;">📄 Your AI Worksheets</h2>
+<style>
+  /* Professional CSS Variables */
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #818cf8;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #1e293b;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --gray-light: #94a3b8;
+    --border-radius: 16px;
+    --border-radius-sm: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  }
+
+  .worksheets-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: var(--gradient-primary);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .hero-section p {
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+  }
+
+  /* Section Headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .section-header i {
+    color: var(--primary);
+  }
+
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+  }
+
+  .section-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+  }
+
+  /* Table Styles */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+  }
+
+  .worksheet-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+  }
+
+  .worksheet-table thead tr {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
+  }
+
+  .worksheet-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .worksheet-table td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  .worksheet-table tbody tr:hover {
+    background: #f8fafc;
+    transition: background 0.3s ease;
+  }
+
+  /* Download Button */
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 1rem;
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .empty-state i {
+    color: var(--gray-light);
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    color: var(--gray);
+    font-size: 0.95rem;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.25rem 0.75rem;
+    background: #e0e7ff;
+    color: var(--primary);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* Topic Cell */
+  .topic-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .worksheets-container {
+      padding: 1rem;
+    }
+    
+    .hero-section {
+      padding: 2rem;
+    }
+    
+    .hero-section h1 {
+      font-size: 1.5rem;
+    }
+    
+    .worksheet-table th,
+    .worksheet-table td {
+      padding: 0.75rem 1rem;
+    }
+    
+    .topic-cell {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+  }
+</style>
+
+<div class="worksheets-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>
+        <i data-lucide="file-text"></i>
+        Your AI Worksheets
+      </h1>
+      <p>Download your generated worksheets and explore related learning materials</p>
+    </div>
+  </div>
+
+  <!-- Recent Worksheet Section -->
+  <div class="section-header">
+    <i data-lucide="clock"></i>
+    <h2>Recent Worksheet</h2>
+  </div>
 
   {% if user_worksheet %}
-    <div style="overflow-x: auto;">
-      <table class="worksheet-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <div class="table-wrapper">
+      <table class="worksheet-table">
         <thead>
-          <tr style="background-color: #f0f0f0; color: #003366; font-weight: bold; font-size: 1.1rem;">
-            <th style="padding: 12px;">Topic</th>
-            <th style="padding: 12px;">Date</th>
-            <th style="padding: 12px;">Download</th>
+          <tr>
+            <th>Topic</th>
+            <th>Date Generated</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="word-wrap: break-word;">
-              {{ request.session.question|truncatechars:50|default:"Latest Worksheet" }}
+            <td>
+              <div class="topic-cell">
+                <i data-lucide="file" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                <span>{{ request.session.question|truncatechars:60|default:"Latest Worksheet" }}</span>
+              </div>
             </td>
             <td>
-              {{ request.session.worksheet_time|default:"N/A" }}
+              <div class="badge">
+                <i data-lucide="calendar" style="width: 12px; height: 12px;"></i>
+                {{ request.session.worksheet_time|default:"N/A" }}
+              </div>
             </td>
             <td>
-              <a href="{{ user_worksheet }}" download style="background-color: white; padding: 4px; border-radius: 5px;">
-                <img src="{% static 'core/images/download-icon.png' %}" alt="Download" width="24">
+              <a href="{{ user_worksheet }}" download class="download-btn">
+                <i data-lucide="download"></i>
+                Download
               </a>
             </td>
           </tr>
@@ -33,30 +288,48 @@
       </table>
     </div>
   {% else %}
-    <p style="text-align: center;">No generated worksheet yet.</p>
+    <div class="empty-state">
+      <i data-lucide="folder-open" style="width: 48px; height: 48px;"></i>
+      <p>No generated worksheet yet. Try solving a math problem first!</p>
+    </div>
   {% endif %}
 
-  <h3 class="mt-4" style="margin-top: 2rem; text-align: center; color: #003366;">🧠 Related Worksheets</h3>
+  <!-- Related Worksheets Section -->
+  <div class="section-header" style="margin-top: 2rem;">
+    <i data-lucide="book-open"></i>
+    <h3>Related Worksheets</h3>
+  </div>
 
   {% if related_worksheets %}
-    <div style="overflow-x: auto;">
-      <table class="worksheet-table" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <div class="table-wrapper">
+      <table class="worksheet-table">
         <thead>
-          <tr style="background-color: #f0f0f0; color: #003366; font-weight: bold; font-size: 1.1rem;">
-            <th style="padding: 12px;">Topic</th>
-            <th style="padding: 12px;">File</th>
-            <th style="padding: 12px;">Download</th>
+          <tr>
+            <th>Topic</th>
+            <th>Format</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {% for file in related_worksheets %}
             {% with file_name=file|cut:".pdf" %}
               <tr>
-                <td style="word-wrap: break-word;">{{ file_name|slice:"-50:" }}</td>
-                <td style="word-wrap: break-word;">{{ file_name }}</td>
                 <td>
-                  <a href="{{ file }}" download style="background-color: white; padding: 4px; border-radius: 5px;">
-                    <img src="{% static 'core/images/download-icon.png' %}" alt="Download" width="24">
+                  <div class="topic-cell">
+                    <i data-lucide="file-pdf" style="width: 18px; height: 18px; color: #dc2626;"></i>
+                    <span>{{ file_name|slice:"-60:" }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="badge">
+                    <i data-lucide="file" style="width: 12px; height: 12px;"></i>
+                    PDF
+                  </span>
+                </td>
+                <td>
+                  <a href="{{ file }}" download class="download-btn">
+                    <i data-lucide="download"></i>
+                    Download
                   </a>
                 </td>
               </tr>
@@ -66,7 +339,16 @@
       </table>
     </div>
   {% else %}
-    <p style="text-align: center;">No related worksheets found.</p>
+    <div class="empty-state">
+      <i data-lucide="search" style="width: 48px; height: 48px;"></i>
+      <p>No related worksheets found. Generate more solutions to see related materials.</p>
+    </div>
   {% endif %}
 </div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
 {% endblock %}

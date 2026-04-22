@@ -1,7 +1,493 @@
 {% extends "core/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
 {% block content %}
-<div class="dashboard-container">
-  <h2>📈 Track Your Progress</h2>
-  <p>Your progress data will appear here once you start solving problems.</p>
+<style>
+  .progress-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border-radius: 24px;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-section p {
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .stat-icon i {
+    width: 28px;
+    height: 28px;
+    color: white;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1f2937;
+  }
+
+  .stat-label {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Charts Grid */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+  }
+
+  .chart-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 300px;
+  }
+
+  /* Recent Activity */
+  .activity-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    margin-bottom: 2rem;
+  }
+
+  .activity-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 12px;
+    transition: background 0.3s ease;
+  }
+
+  .activity-item:hover {
+    background: #f3f4f6;
+  }
+
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    background: #e0e7ff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .activity-icon i {
+    width: 20px;
+    height: 20px;
+    color: #4f46e5;
+  }
+
+  .activity-content {
+    flex: 1;
+  }
+
+  .activity-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+  }
+
+  .activity-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+  }
+
+  .activity-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 500;
+  }
+
+  .status-correct {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-incorrect {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  /* Subject Performance */
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .subject-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .subject-name {
+    font-weight: 500;
+    color: #1f2937;
+  }
+
+  .subject-score {
+    font-weight: 600;
+    color: #4f46e5;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    margin: 0 1rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 4rem;
+    background: white;
+    border-radius: 20px;
+  }
+
+  .empty-state i {
+    width: 64px;
+    height: 64px;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    color: #6b7280;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .progress-container {
+      padding: 1rem;
+    }
+    .charts-grid {
+      grid-template-columns: 1fr;
+    }
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<div class="progress-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>
+        <i data-lucide="trending-up"></i>
+        Track Your Progress
+      </h1>
+      <p>Monitor your learning journey and see how you're improving</p>
+    </div>
+  </div>
+
+  {% if has_data %}
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="target"></i></div>
+        <div class="stat-value">{{ total_questions }}</div>
+        <div class="stat-label">Questions Solved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="check-circle"></i></div>
+        <div class="stat-value">{{ correct_percentage }}%</div>
+        <div class="stat-label">Success Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="award"></i></div>
+        <div class="stat-value">{{ current_stage }}</div>
+        <div class="stat-label">Current Stage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i data-lucide="flame"></i></div>
+        <div class="stat-value">{{ current_streak }}</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3><i data-lucide="bar-chart-3"></i> Performance Trend</h3>
+        <div class="chart-container">
+          <canvas id="performanceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3><i data-lucide="pie-chart"></i> Correct vs Incorrect</h3>
+        <div class="chart-container">
+          <canvas id="accuracyChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subject Performance -->
+    {% if subject_performance %}
+    <div class="chart-card" style="margin-bottom: 1.5rem;">
+      <h3><i data-lucide="book-open"></i> Subject Performance</h3>
+      <div class="subjects-grid">
+        {% for subject in subject_performance %}
+        <div class="subject-item">
+          <span class="subject-name">{{ subject.name }}</span>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ subject.percentage }}%"></div>
+          </div>
+          <span class="subject-score">{{ subject.percentage }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+      <h3><i data-lucide="clock"></i> Recent Activity</h3>
+      <div class="activity-list">
+        {% for activity in recent_activities %}
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i data-lucide="{% if activity.is_correct %}check-circle{% else %}x-circle{% endif %}"></i>
+          </div>
+          <div class="activity-content">
+            <div class="activity-title">{{ activity.question }}</div>
+            <div class="activity-meta">
+              <span>{{ activity.timestamp|timesince }} ago</span>
+              <span class="activity-status status-{% if activity.is_correct %}correct{% else %}incorrect{% endif %}">
+                {% if activity.is_correct %}Correct{% else %}Incorrect{% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <p>No recent activity yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i data-lucide="bar-chart-3"></i>
+      <p>Your progress data will appear here once you start solving problems.</p>
+      <a href="{% url 'math_games' %}" class="btn-primary" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 1rem; padding: 0.75rem 1.5rem; background: #4f46e5; color: white; border-radius: 50px; text-decoration: none;">
+        <i data-lucide="play"></i>
+        Start Learning Now
+      </a>
+    </div>
+  {% endif %}
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+  lucide.createIcons();
+
+  {% if has_data %}
+  // Performance Trend Chart
+  const ctx1 = document.getElementById('performanceChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'line',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: 'Correct Answers (%)',
+        data: {{ chart_data|safe }},
+        borderColor: '#4f46e5',
+        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#4f46e5',
+        pointBorderColor: 'white',
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: { callbacks: { label: (ctx) => `${ctx.raw}% correct` } }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 100, title: { display: true, text: 'Success Rate (%)' } },
+        x: { title: { display: true, text: 'Stage Level' } }
+      }
+    }
+  });
+
+  // Accuracy Chart
+  const ctx2 = document.getElementById('accuracyChart').getContext('2d');
+  new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['Correct', 'Incorrect'],
+      datasets: [{
+        data: [{{ correct_count }}, {{ incorrect_count }}],
+        backgroundColor: ['#10b981', '#ef4444'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw} questions (${Math.round(ctx.raw / ({{ correct_count }} + {{ incorrect_count }}) * 100)}%)` } }
+      }
+    }
+  });
+  {% endif %}
+</script>
+
+<style>
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #4f46e5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+  }
+</style>
 {% endblock %}

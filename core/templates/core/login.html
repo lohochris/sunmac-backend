@@ -3,56 +3,291 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - SUNMAC</title>
   <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .signup-section {
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .section-wrapper {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #1a237e;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper i:first-child {
+      position: absolute;
+      left: 15px;
+      color: #999;
+      font-size: 18px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 15px 12px 45px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #1a237e;
+      box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #999;
+      font-size: 18px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
+      z-index: 2;
+    }
+
+    .toggle-password:hover {
+      color: #1a237e;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-top: 10px;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+    }
+
+    .error-message {
+      background: #ffebee;
+      color: #f44336;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #f44336;
+      font-size: 14px;
+    }
+
+    .success-message {
+      background: #e8f5e9;
+      color: #4caf50;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #4caf50;
+      font-size: 14px;
+    }
+
+    .info-message {
+      background: #e3f2fd;
+      color: #2196f3;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #2196f3;
+      font-size: 14px;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .links a {
+      color: #1a237e;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      display: inline-block;
+      margin: 5px 0;
+    }
+
+    .links a:hover {
+      color: #283593;
+      text-decoration: underline;
+    }
+
+    .forgot-password {
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <section class="signup-section">
     <div class="section-wrapper">
-      <h2>Login</h2>
+      <h2>
+        <i class="fas fa-graduation-cap" style="margin-right: 10px;"></i>
+        Welcome Back
+      </h2>
+      
+      <!-- Display messages -->
       {% if messages %}
-  {% for message in messages %}
-    <p style="color: green;">{{ message }}</p>
-  {% endfor %}
-{% endif %}
+        {% for message in messages %}
+          <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}" style="margin-right: 8px;"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
 
-
-      {% if form.errors %}
-        <p style="color: red;">
-          Please enter a correct <strong>username</strong> and password.
-          Note that both fields may be case-sensitive.
-        </p>
+      <!-- Display form errors -->
+      {% if form.non_field_errors %}
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
       {% endif %}
 
       <form method="post" class="signup-form">
         {% csrf_token %}
         
-        <p>
-          <label for="{{ form.username.id_for_label }}">Username:</label><br>
-          {{ form.username }}
-        </p>
+        <div class="form-group">
+          <label for="id_username">
+            <i class="fas fa-user"></i> Username
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required autofocus>
+          </div>
+        </div>
 
-        <p>
-          <label for="{{ form.password.id_for_label }}">Password:</label><br>
-          {{ form.password }}
-        </p>
+        <div class="form-group">
+          <label for="id_password">
+            <i class="fas fa-lock"></i> Password
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
+            <button type="button" class="toggle-password" data-target="id_password">
+              <i class="far fa-eye-slash"></i>
+            </button>
+          </div>
+        </div>
 
-        <button type="submit">Login</button>
+        <button type="submit">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </button>
       </form>
 
-      <p>
-        <a href="{% url 'password_reset' %}" style="color: #1a237e; font-weight: bold;">
-          Forgot your password?
+      <div class="links">
+        <a href="{% url 'reset_password' %}" class="forgot-password">
+          <i class="fas fa-key"></i> Forgot your password?
         </a>
-      </p>
-
-      <p>
-        Don't have an account?
-        <a href="{% url 'signup' %}" style="color: #1a237e; font-weight: bold;">
-          Sign up
-        </a>
-      </p>
+        <p style="margin-top: 15px;">
+          Don't have an account?
+          <a href="{% url 'signup' %}">
+            <i class="fas fa-user-plus"></i> Sign up here
+          </a>
+        </p>
+      </div>
     </div>
   </section>
+
+  <script>
+    // Password visibility toggle with icon switching
+    document.querySelectorAll('.toggle-password').forEach(button => {
+      button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        const icon = this.querySelector('i');
+        
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        } else {
+          input.type = 'password';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,51 +1,387 @@
 {% extends "core/base.html" %}
+{% load static %}
 {% block content %}
-<div class="section-wrapper">
-  <h2 style="text-align:center; color:#003366; margin-bottom: 10px;">🎓 Student Opportunities</h2>
+
+<style>
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --secondary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+  }
+
+  .opportunities-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: var(--primary-gradient);
+    border-radius: var(--border-radius);
+    padding: 60px 40px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.95);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Section Styles */
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .section-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-header p {
+    color: #6c757d;
+    margin-top: 10px;
+  }
+
+  /* Cards Grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .opportunity-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .opportunity-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .card-icon i {
+    width: 32px;
+    height: 32px;
+    color: #4f46e5;
+  }
+
+  .opportunity-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+  }
+
+  .opportunity-card p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .badge {
+    background: #e0e7ff;
+    color: #4f46e5;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #4f46e5;
+    color: #4f46e5;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .btn-outline:hover {
+    background: #4f46e5;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Scholarship Tips Section */
+  .tips-section {
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+    padding: 40px;
+    margin-top: 30px;
+  }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+  }
+
+  .tip-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .tip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .tip-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+  }
+
+  .tip-icon i {
+    width: 28px;
+    height: 28px;
+    color: white;
+  }
+
+  .tip-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+  }
+
+  .tip-card p {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .tips-grid {
+      grid-template-columns: 1fr;
+    }
+    .tips-section {
+      padding: 25px;
+    }
+  }
+</style>
+
+<div class="opportunities-container">
+  
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-title">
+        <i data-lucide="graduation-cap"></i>
+        <span>Student Opportunities</span>
+      </div>
+      <div class="hero-subtitle">
+        Discover global scholarships, internships, and youth programs to accelerate your academic and professional journey.
+      </div>
+    </div>
   </div>
 
-  <!-- 🌐 Global Opportunities Section -->
-  <div class="section-wrapper" style="margin-top: 40px;">
-    <h2 style="text-align:center; color:#003366;">🌐 Global Scholarships & Internships</h2>
-    <div class="tool-cards">
+  <!-- Global Scholarships & Internships -->
+  <div class="section-header">
+    <h2><i data-lucide="globe"></i> Global Scholarships & Internships</h2>
+    <p>Fully-funded opportunities to study and work abroad</p>
+  </div>
 
-      <div class="tool-card">
-        <h3>🎓 DAAD Scholarships (Germany)</h3>
-        <p>Germany’s premier funding body offers scholarships for undergraduate and postgraduate students worldwide.</p>
-        <a href="https://www.daad.de/" target="_blank"><button>Explore DAAD</button></a>
+  <div class="cards-grid">
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="landmark"></i></div>
+      <h3>DAAD Scholarships (Germany)</h3>
+      <p>Germany's premier funding body offers scholarships for undergraduate and postgraduate students worldwide.</p>
+      <div class="card-footer">
+        <span class="badge">Germany</span>
+        <a href="https://www.daad.de/" target="_blank" class="btn-outline">Explore DAAD <i data-lucide="arrow-right"></i></a>
       </div>
-
-      <div class="tool-card">
-        <h3>🌏 Commonwealth Scholarships</h3>
-        <p>Study in the UK through fully-funded Commonwealth programs available for students from developing nations.</p>
-        <a href="https://cscuk.fcdo.gov.uk/scholarships/" target="_blank"><button>Apply Now</button></a>
-      </div>
-
-      <div class="tool-card">
-        <h3>🧒 UNICEF Youth Engagement</h3>
-        <p>Participate in global youth programs, innovation labs, and advocacy work with UNICEF.</p>
-        <a href="https://www.unicef.org/" target="_blank"><button>Join UNICEF Youth</button></a>
-      </div>
-
-      <div class="tool-card">
-        <h3>📚 UNESCO Student Programs</h3>
-        <p>Get involved in international education and cultural exchange through UNESCO opportunities for youth.</p>
-        <a href="https://www.unesco.org/" target="_blank"><button>Explore Programs</button></a>
-      </div>
-
-      <div class="tool-card">
-        <h3>🧪 IAESTE Internships (STEM)</h3>
-        <p>Technical internships abroad in science, engineering, and applied fields for university students.</p>
-        <a href="https://iaeste.org/" target="_blank"><button>Apply to IAESTE</button></a>
-      </div>
-        
-      <div class="tool-card">
-      <h3>🌍 International Scholarships</h3>
-      <p>Explore fully-funded opportunities to study abroad, including government and institutional scholarships.</p>
-      <a href="https://www.scholarshipportal.com/" target="_blank"><button>Browse Scholarships</button></a>
     </div>
 
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="award"></i></div>
+      <h3>Commonwealth Scholarships</h3>
+      <p>Study in the UK through fully-funded Commonwealth programs for students from developing nations.</p>
+      <div class="card-footer">
+        <span class="badge">United Kingdom</span>
+        <a href="https://cscuk.fcdo.gov.uk/scholarships/" target="_blank" class="btn-outline">Apply Now <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="heart-handshake"></i></div>
+      <h3>UNICEF Youth Engagement</h3>
+      <p>Participate in global youth programs, innovation labs, and advocacy work with UNICEF.</p>
+      <div class="card-footer">
+        <span class="badge">Global</span>
+        <a href="https://www.unicef.org/" target="_blank" class="btn-outline">Join UNICEF Youth <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="university"></i></div>
+      <h3>UNESCO Student Programs</h3>
+      <p>Get involved in international education and cultural exchange through UNESCO opportunities for youth.</p>
+      <div class="card-footer">
+        <span class="badge">Global</span>
+        <a href="https://www.unesco.org/" target="_blank" class="btn-outline">Explore Programs <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="microscope"></i></div>
+      <h3>IAESTE Internships (STEM)</h3>
+      <p>Technical internships abroad in science, engineering, and applied fields for university students.</p>
+      <div class="card-footer">
+        <span class="badge">STEM</span>
+        <a href="https://iaeste.org/" target="_blank" class="btn-outline">Apply to IAESTE <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="opportunity-card">
+      <div class="card-icon"><i data-lucide="search"></i></div>
+      <h3>International Scholarships</h3>
+      <p>Explore fully-funded opportunities to study abroad, including government and institutional scholarships.</p>
+      <div class="card-footer">
+        <span class="badge">Worldwide</span>
+        <a href="https://www.scholarshipportal.com/" target="_blank" class="btn-outline">Browse Scholarships <i data-lucide="arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scholarship Application Tips -->
+  <div class="tips-section">
+    <div class="section-header">
+      <h2><i data-lucide="lightbulb"></i> Scholarship Application Tips</h2>
+      <p>Maximize your chances of success with these expert strategies</p>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon"><i data-lucide="search"></i></div>
+        <h4>Research Thoroughly</h4>
+        <p>Find scholarships that match your qualifications, background, and academic interests.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon"><i data-lucide="file-text"></i></div>
+        <h4>Prepare Documents Early</h4>
+        <p>Gather transcripts, recommendation letters, and test scores well before deadlines.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon"><i data-lucide="pen-tool"></i></div>
+        <h4>Craft a Compelling Essay</h4>
+        <p>Write a motivation letter that highlights your unique story, achievements, and goals.</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon"><i data-lucide="target"></i></div>
+        <h4>Customize Each Application</h4>
+        <p>Tailor your application to address the specific criteria and mission of each scholarship.</p>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+
 {% endblock %}

@@ -2,135 +2,475 @@
 {% load static %}
 
 {% block content %}
-<div class="ai-book-container">
-  <h2 class="ai-title">📅 Book a Live Class</h2>
-
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li style="color: green; font-weight: bold;">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-
-  <p class="booking-intro">
-    Need personalized help? Schedule a live class with a professional tutor to walk you through any topic.
-  </p>
-
-  <div class="ai-book-page">
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% for field in form %}
-        <div class="form-group">
-          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}
-            <div class="errorlist">{{ field.errors.as_text|linebreaksbr }}</div>
-          {% endif %}
-        </div>
-      {% endfor %}
-      <button type="submit" class="book-button">Book Now</button>
-    </form>
-  </div>
-</div>
-
 <style>
-  .ai-book-container {
-    padding: 30px 20px;
-    max-width: 900px;
-    margin: auto;
-    background-color: #fdfdfd;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
-    border-radius: 12px;
+  /* Professional CSS Variables */
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #4338ca;
+    --primary-light: #818cf8;
+    --success: #10b981;
+    --success-dark: #059669;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --gray-light: #94a3b8;
+    --border-radius: 24px;
+    --border-radius-sm: 16px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
 
-  .ai-title {
-    text-align: center;
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 15px;
+  .booking-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f0 100%);
+    padding: 3rem 1.5rem;
   }
 
-  .booking-intro {
+  .booking-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Hero Section */
+  .hero-section {
     text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(79, 70, 229, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .hero-section h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+
+  .hero-section p {
+    color: var(--gray);
+    font-size: 1.1rem;
     max-width: 600px;
-    margin: auto;
-    color: #555;
-    font-size: 16px;
-    line-height: 1.5;
+    margin: 0 auto;
   }
 
-  .ai-book-page {
-    max-width: 500px;
-    margin: 30px auto 10px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  /* Messages */
+  .messages-container {
+    max-width: 600px;
+    margin: 0 auto 2rem;
   }
 
-  .book-button {
-    background-color: #4CAF50;
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1rem;
+    animation: slideIn 0.5s ease;
+    background: white;
+    box-shadow: var(--shadow-md);
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .alert-success {
+    border-left: 4px solid var(--success);
+  }
+
+  .alert-success i {
+    color: var(--success);
+  }
+
+  .alert-error {
+    border-left: 4px solid var(--danger);
+  }
+
+  .alert-error i {
+    color: var(--danger);
+  }
+
+  /* Booking Card */
+  .booking-card {
+    max-width: 650px;
+    margin: 0 auto;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-2xl);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  .booking-card:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Card Header */
+  .card-header {
+    background: var(--gradient-primary);
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .card-header-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-header h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .card-header p {
+    color: rgba(255,255,255,0.9);
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Card Body */
+  .card-body {
+    padding: 2.5rem;
+  }
+
+  /* Form Groups */
+  .form-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .form-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .form-group label i {
+    color: var(--primary);
+    width: 18px;
+    height: 18px;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.875rem 1.25rem;
+    border: 2px solid #e2e8f0;
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--light);
+    font-family: inherit;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+  }
+
+  select.form-control {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f46e5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  /* Error Messages */
+  .errorlist {
+    list-style: none;
+    margin-top: 0.5rem;
+    padding: 0;
+  }
+
+  .errorlist li {
+    color: var(--danger);
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Submit Button */
+  .submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--gradient-success);
     color: white;
     border: none;
-    padding: 12px 20px;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-    width: 100%;
-  }
-
-  .book-button:hover {
-    background-color: #45a049;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  label {
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1rem;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  /* Info Section */
+  .info-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .info-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: var(--border-radius-sm);
+  }
+
+  .info-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(79, 70, 229, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info-icon i {
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+  }
+
+  .info-text {
+    flex: 1;
+  }
+
+  .info-text strong {
     display: block;
-    margin-bottom: 6px;
-    color: #222;
+    font-size: 0.8rem;
+    color: var(--dark);
   }
 
-  input[type="text"],
-  input[type="date"],
-  input[type="time"] {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    color: #222;
-    background-color: #f9f9f9;
+  .info-text span {
+    font-size: 0.7rem;
+    color: var(--gray);
   }
 
-  .errorlist {
-    color: #d00;
-    font-size: 14px;
-    margin-top: 6px;
-    font-style: italic;
-  }
-
-  .messages {
-    margin-top: 15px;
-    padding-left: 0;
-    list-style-type: none;
-    text-align: center;
-  }
-
-  @media screen and (max-width: 600px) {
-    .ai-book-page {
-      padding: 15px;
+  /* Responsive */
+  @media (max-width: 768px) {
+    .booking-page {
+      padding: 2rem 1rem;
     }
-
-    .book-button {
-      font-size: 15px;
+    
+    .hero-section h1 {
+      font-size: 2rem;
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    .info-section {
+      flex-direction: column;
+    }
+    
+    .info-item {
+      justify-content: center;
     }
   }
 </style>
+
+<div class="booking-page">
+  <div class="booking-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="hero-badge">
+        <i data-lucide="sparkles"></i>
+        <span>Personalized Learning</span>
+      </div>
+      <h1>Book a Live Class</h1>
+      <p>Schedule a personalized session with a professional tutor to walk you through any topic</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}error{% else %}{{ message.tags }}{% endif %}">
+            <i data-lucide="{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}alert-circle{% else %}info{% endif %}"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Booking Card -->
+    <div class="booking-card">
+      <div class="card-header">
+        <div class="card-header-content">
+          <h2>
+            <i data-lucide="calendar"></i>
+            Schedule Your Session
+          </h2>
+          <p>Fill out the form below to book your personalized tutoring session</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">
+                <i data-lucide="{% if field.name == 'topic' %}book-open{% elif field.name == 'date' %}calendar{% elif field.name == 'time' %}clock{% else %}user{% endif %}"></i>
+                {{ field.label }}
+              </label>
+              {{ field }}
+              {% if field.errors %}
+                <ul class="errorlist">
+                  {% for error in field.errors %}
+                    <li><i data-lucide="alert-circle"></i> {{ error }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+          
+          <button type="submit" class="submit-btn">
+            <i data-lucide="check"></i>
+            Confirm Booking
+          </button>
+        </form>
+
+        <!-- Info Section -->
+        <div class="info-section">
+          <div class="info-item">
+            <div class="info-icon">
+              <i data-lucide="clock"></i>
+            </div>
+            <div class="info-text">
+              <strong>Duration</strong>
+              <span>45-60 minutes</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">
+              <i data-lucide="video"></i>
+            </div>
+            <div class="info-text">
+              <strong>Platform</strong>
+              <span>Zoom / Google Meet</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">
+              <i data-lucide="mail"></i>
+            </div>
+            <div class="info-text">
+              <strong>Confirmation</strong>
+              <span>Email with details</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
 {% endblock %}

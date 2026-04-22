@@ -2,99 +2,604 @@
 {% load static %}
 
 {% block content %}
-<div class="ai-book-container">
-  <h2 class="ai-title" style="text-align: center;">🧠 Interactive Math Game</h2>
-
-  <div class="ai-book-page" style="max-width: 500px; margin: auto;">
-
-    <div style="text-align: center; margin-bottom: 10px;">
-      <p style="font-size: 16px;"><strong>Stage {{ stage }} of 10</strong></p>
-      <p style="font-size: 16px;">⏱️ Time Remaining: <span id="timer" style="color: red;">{{ timer }}</span> seconds</p>
-      {% if score %}
-        <p style="font-size: 16px;">🏆 Score: <strong>{{ score }}</strong></p>
-      {% endif %}
-    </div>
-
-    <form method="post" style="text-align: center;">
-      {% csrf_token %}
-      <div style="margin-bottom: 20px;">
-        <strong style="font-size: 18px;">Solve: {{ question }}</strong>
-      </div>
-
-      <input type="hidden" name="question" value="{{ question }}">
-      <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-      <input type="hidden" name="stage" value="{{ stage }}">
-      <input type="text" name="answer" placeholder="Enter your answer..." style="padding: 10px; width: 60%; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;" required>
-      <br><br>
-      <button type="submit" class="book-button">Submit</button>
-    </form>
-
-    {% if result %}
-      <div class="ai-solution" style="margin-top: 25px; text-align: center;">
-        <p style="font-size: 18px; font-weight: bold; color: {% if 'Correct' in result %}green{% else %}red{% endif %};">
-          {{ result }}
-        </p>
-      </div>
-    {% endif %}
-
-    <div style="text-align: center; margin-top: 20px;">
-      <form method="post" action="{% url 'reset_score' %}">
-        {% csrf_token %}
-        <button type="submit" class="book-button" style="background-color: #b90000;">🔁 Reset Score</button>
-      </form>
-    </div>
-
-  </div>
-</div>
-
 <style>
-  .book-button {
-    background-color: #4CAF50;
-    color: white;
-    font-weight: bold;
-    padding: 12px 25px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --danger-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
   }
 
-  .book-button:hover {
-    background-color: #388e3c;
-  }
-
-  .ai-book-container {
+  /* Game Container */
+  .game-container {
+    min-height: calc(100vh - 200px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 40px 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
   }
 
-  .ai-title {
-    font-size: 28px;
-    margin-bottom: 20px;
+  .game-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 70%);
+    animation: pulse 8s ease-in-out infinite;
   }
 
-  .ai-book-page {
-    background-color: #fff;
-    border: 2px dashed #ddd;
-    border-radius: 10px;
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  /* Game Card */
+  .game-card {
+    background: white;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.6s ease;
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Game Header */
+  .game-header {
+    background: var(--primary-gradient);
     padding: 30px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    position: relative;
+  }
+
+  .game-header h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px 30px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1a1a2e;
+  }
+
+  .stat-value.warning {
+    color: #f59e0b;
+  }
+
+  .stat-value.danger {
+    color: #ef4444;
+  }
+
+  /* Progress Section */
+  .progress-section {
+    padding: 20px 30px;
+    background: white;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  .progress-bar-container {
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 8px;
+  }
+
+  .progress-bar-fill {
+    background: var(--primary-gradient);
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+  }
+
+  /* Question Section */
+  .question-section {
+    padding: 30px;
+    text-align: center;
+    background: white;
+  }
+
+  .question-text {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .question-hint {
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+
+  /* Input Section */
+  .input-section {
+    padding: 0 30px 30px;
+  }
+
+  .answer-input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .answer-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  /* Submit Button */
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Result Message */
+  .result-message {
+    margin: 20px 30px;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    animation: slideIn 0.5s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .result-correct {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  .result-incorrect {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+  }
+
+  /* Reset Button */
+  .reset-section {
+    padding: 0 30px 30px;
+  }
+
+  .reset-btn {
+    width: 100%;
+    padding: 12px;
+    background: white;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .reset-btn:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Power-ups */
+  .powerups-section {
+    padding: 0 30px 30px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .powerup-btn {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .powerup-btn:hover:not(:disabled) {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .powerup-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stats-bar {
+      padding: 15px 20px;
+    }
+    
+    .stat-value {
+      font-size: 1.2rem;
+    }
+    
+    .question-text {
+      font-size: 1.5rem;
+    }
+    
+    .game-header h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  /* Celebration Animation */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .celebration {
+    animation: bounce 0.5s ease;
   }
 </style>
 
+<div class="game-container">
+  <div class="game-card">
+    <!-- Game Header -->
+    <div class="game-header">
+      <h2>
+        <i data-lucide="brain"></i>
+        Interactive Math Game
+      </h2>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-label">
+          <i data-lucide="flag"></i>
+          <span>Stage</span>
+        </div>
+        <div class="stat-value">{{ stage }} / 10</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">
+          <i data-lucide="trophy"></i>
+          <span>Score</span>
+        </div>
+        <div class="stat-value">{{ score }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">
+          <i data-lucide="clock"></i>
+          <span>Time</span>
+        </div>
+        <div class="stat-value timer-display" id="timerDisplay">{{ timer }}</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-section">
+      <div class="progress-label">
+        <span>Stage Progress</span>
+        <span>{{ stage }} of 10</span>
+      </div>
+      <div class="progress-bar-container">
+        {% with progress_width=stage|add:0|stringformat:"d" %}
+        <div class="progress-bar-fill" style="width: {% if stage == 10 %}100{% else %}{{ stage }}0{% endif %}%;"></div>
+        {% endwith %}
+      </div>
+    </div>
+
+    <!-- Question Section -->
+    <div class="question-section">
+      <div class="question-text" id="questionText">
+        {{ question }}
+      </div>
+      <div class="question-hint">
+        <i data-lucide="lightbulb"></i> Enter your answer below
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" id="gameForm">
+      {% csrf_token %}
+      <input type="hidden" name="question" value="{{ question }}">
+      <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+      <input type="hidden" name="stage" value="{{ stage }}">
+      
+      <div class="input-section">
+        <input type="number" 
+               name="answer" 
+               class="answer-input" 
+               placeholder="Enter your answer..." 
+               id="answerInput"
+               autocomplete="off"
+               autofocus>
+        
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <i data-lucide="check-circle"></i>
+          Submit Answer
+        </button>
+      </div>
+    </form>
+
+    <!-- Result Message -->
+    {% if result %}
+    <div class="result-message {% if 'Correct' in result %}result-correct{% else %}result-incorrect{% endif %}">
+      <i data-lucide="{% if 'Correct' in result %}check-circle{% else %}x-circle{% endif %}"></i>
+      <span>{{ result }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Power-ups -->
+    <div class="powerups-section">
+      <button class="powerup-btn" onclick="usePowerUp('hint')" id="hintBtn">
+        <i data-lucide="lightbulb"></i>
+        Hint
+      </button>
+      <button class="powerup-btn" onclick="usePowerUp('skip')" id="skipBtn">
+        <i data-lucide="skip-forward"></i>
+        Skip
+      </button>
+    </div>
+
+    <!-- Reset Button -->
+    <div class="reset-section">
+      <form method="post" action="{% url 'reset_score' %}">
+        {% csrf_token %}
+        <button type="submit" class="reset-btn">
+          <i data-lucide="refresh-cw"></i>
+          Reset Game Progress
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Timer functionality
   let timeLeft = {{ timer }};
-  const timerDisplay = document.getElementById('timer');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const submitBtn = document.getElementById('submitBtn');
+  const answerInput = document.getElementById('answerInput');
+  const gameForm = document.getElementById('gameForm');
 
   const countdown = setInterval(() => {
-    timeLeft--;
-    if (timeLeft <= 0) {
-      clearInterval(countdown);
-      timerDisplay.innerText = "⏰ Time's up!";
-    } else {
-      timerDisplay.innerText = timeLeft;
+    if (timeLeft > 0) {
+      timeLeft--;
+      if (timerDisplay) {
+        timerDisplay.innerText = timeLeft;
+        
+        // Change color based on time remaining
+        if (timeLeft <= 10) {
+          timerDisplay.classList.add('danger');
+          timerDisplay.style.color = '#ef4444';
+        } else if (timeLeft <= 20) {
+          timerDisplay.style.color = '#f59e0b';
+        } else {
+          timerDisplay.style.color = '#1a1a2e';
+        }
+        
+        if (timeLeft === 0) {
+          clearInterval(countdown);
+          timerDisplay.innerText = '0';
+          showAlert('Time is up!', 'error');
+          submitBtn.disabled = true;
+          answerInput.disabled = true;
+        }
+      }
     }
   }, 1000);
+
+  // Auto-focus on answer input
+  answerInput.focus();
+
+  // Submit on Enter key
+  answerInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (!submitBtn.disabled && answerInput.value.trim()) {
+        gameForm.submit();
+      }
+    }
+  });
+
+  // Power-ups functionality
+  let hintsUsed = 0;
+  let skipsUsed = 0;
+
+  function usePowerUp(type) {
+    if (type === 'hint') {
+      if (hintsUsed < 2) {
+        hintsUsed++;
+        showHint();
+        document.getElementById('hintBtn').disabled = true;
+        setTimeout(() => {
+          document.getElementById('hintBtn').disabled = false;
+        }, 30000);
+      } else {
+        showAlert('No more hints available for this stage!', 'error');
+      }
+    } else if (type === 'skip') {
+      if (skipsUsed < 1) {
+        skipsUsed++;
+        skipQuestion();
+        document.getElementById('skipBtn').disabled = true;
+      } else {
+        showAlert('No more skips available!', 'error');
+      }
+    }
+  }
+
+  function showHint() {
+    const question = '{{ question }}';
+    let hint = '';
+    
+    if (question.includes('+')) {
+      hint = 'Add the numbers together.';
+    } else if (question.includes('-')) {
+      hint = 'Subtract the second number from the first.';
+    } else if (question.includes('×')) {
+      hint = 'Multiply the numbers.';
+    } else if (question.includes('÷')) {
+      hint = 'Divide the first number by the second.';
+    } else if (question.includes('^')) {
+      hint = 'Calculate the power (first number raised to second number).';
+    } else if (question.includes('√')) {
+      hint = 'Find the square root of the number.';
+    } else {
+      hint = 'Think carefully about the operation needed.';
+    }
+    
+    showAlert(`Hint: ${hint}`, 'info');
+  }
+
+  function skipQuestion() {
+    showAlert('Question skipped! Loading next question...', 'info');
+    setTimeout(() => {
+      gameForm.submit();
+    }, 1000);
+  }
+
+  function showAlert(message, type) {
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.game-alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `game-alert result-message ${type === 'error' ? 'result-incorrect' : 'result-correct'}`;
+    alertDiv.style.position = 'fixed';
+    alertDiv.style.top = '20px';
+    alertDiv.style.right = '20px';
+    alertDiv.style.maxWidth = '300px';
+    alertDiv.style.zIndex = '1000';
+    alertDiv.innerHTML = `
+      <i data-lucide="${type === 'error' ? 'alert-circle' : (type === 'info' ? 'info' : 'check-circle')}"></i>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(alertDiv);
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 3000);
+  }
+
+  // Celebration animation on correct answer
+  {% if result and 'Correct' in result %}
+  const gameCard = document.querySelector('.game-card');
+  gameCard.classList.add('celebration');
+  setTimeout(() => {
+    gameCard.classList.remove('celebration');
+  }, 500);
+  {% endif %}
 </script>
+
 {% endblock %}

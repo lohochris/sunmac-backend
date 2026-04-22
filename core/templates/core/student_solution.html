@@ -2,36 +2,610 @@
 {% load static %}
 
 {% block content %}
-  <section class="ai-book-container">
-    <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
-    <div class="ai-book-page">
-      <div class="ai-question">
-        <strong>Question:</strong><br>
-        {{ question }}
+<style>
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+    --border-radius: 16px;
+  }
+
+  /* Solution Book Container */
+  .solution-book {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* Hero Section */
+  .book-hero {
+    background: var(--primary-gradient);
+    border-radius: var(--border-radius);
+    padding: 60px 40px;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .book-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .book-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .book-hero p {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.95);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Book Card */
+  .book-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  /* Book Header */
+  .book-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 25px 30px;
+    border-bottom: 3px solid #667eea;
+  }
+
+  .book-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .book-header h2 i {
+    color: #667eea;
+    font-size: 1.8rem;
+  }
+
+  /* Book Content */
+  .book-content {
+    padding: 40px;
+  }
+
+  /* Question Section */
+  .question-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-left: 4px solid #667eea;
+    transition: transform 0.3s ease;
+  }
+
+  .question-section:hover {
+    transform: translateX(5px);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  .section-title i {
+    font-size: 1.3rem;
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+
+  /* Solution Section */
+  .solution-section {
+    padding: 10px 0;
+  }
+
+  .solution-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #28a745;
+  }
+
+  .solution-title i {
+    font-size: 1.3rem;
+  }
+
+  .solution-text {
+    line-height: 1.8;
+    color: #34495e;
+    font-size: 1rem;
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+  }
+
+  .solution-text p {
+    margin-bottom: 15px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .btn-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+  }
+
+  .btn-secondary:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* YouTube Section */
+  .youtube-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 0.6s ease 0.4s both;
+  }
+
+  .youtube-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+
+  .youtube-header h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: var(--secondary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .youtube-header p {
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+
+  .youtube-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
+
+  .youtube-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .youtube-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .youtube-thumbnail {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .youtube-info {
+    padding: 15px;
+  }
+
+  .youtube-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .youtube-channel {
+    font-size: 0.85rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 40px;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Alert */
+  .alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+    animation: slideInRight 0.3s ease;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .alert-success {
+    border-left: 4px solid #28a745;
+  }
+
+  .alert-success i {
+    color: #28a745;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .book-hero {
+      padding: 40px 20px;
+    }
+    
+    .book-hero h1 {
+      font-size: 2rem;
+    }
+    
+    .book-content {
+      padding: 20px;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .btn {
+      justify-content: center;
+    }
+    
+    .youtube-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Print Styles */
+  @media print {
+    .book-hero,
+    .action-buttons,
+    .youtube-section {
+      display: none;
+    }
+    
+    .book-card {
+      box-shadow: none;
+      margin: 0;
+    }
+    
+    .book-content {
+      padding: 0;
+    }
+  }
+</style>
+
+<div class="solution-book">
+  <!-- Hero Section -->
+  <div class="book-hero">
+    <h1>
+      <i data-lucide="graduation-cap"></i> Digital Solution Book
+    </h1>
+    <p>AI-Powered Step-by-Step Mathematics Solutions</p>
+  </div>
+
+  <!-- Solution Book Card -->
+  <div class="book-card">
+    <div class="book-header">
+      <h2>
+        <i data-lucide="book-open"></i>
+        Solution Details
+      </h2>
+    </div>
+    
+    <div class="book-content">
+      <!-- Question Section -->
+      <div class="question-section">
+        <div class="section-title">
+          <i data-lucide="help-circle"></i>
+          <span>Problem Statement</span>
+        </div>
+        <div class="question-text">
+          {{ question|linebreaks }}
+        </div>
       </div>
-      <div class="solution-text">
-        {{ result|linebreaks }}
+
+      <!-- Solution Section -->
+      <div class="solution-section">
+        <div class="solution-title">
+          <i data-lucide="lightbulb"></i>
+          <span>Step-by-Step Solution</span>
+        </div>
+        <div class="solution-text">
+          {{ result|linebreaks }}
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="printSolution()">
+          <i data-lucide="printer"></i>
+          Print Solution
+        </button>
+        <button class="btn btn-secondary" onclick="copySolution()">
+          <i data-lucide="copy"></i>
+          Copy to Clipboard
+        </button>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="youtube-section" style="margin-top: 40px; text-align: center;">
-    <h3 class="youtube-title" style="font-size: 1.4rem; color: #c4302b;">🎥 Related YouTube Videos</h3>
-    <div id="youtube-results" class="youtube-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px;"></div>
-  </section>
+  <!-- YouTube Section -->
+  <div class="youtube-section">
+    <div class="youtube-header">
+      <h3>
+        <i data-lucide="youtube"></i>
+        Related Video Resources
+      </h3>
+      <p>Hand-picked tutorials to enhance your understanding</p>
+    </div>
+    <div id="youtube-results" class="youtube-grid">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p style="margin-top: 15px; color: #6c757d;">Loading video recommendations...</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  <!-- ✅ Load YouTube Script -->
-  <script src="{% static 'core/js/youtube.js' %}"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- ✅ Call Function After DOM Loads -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const userQuestion = `{{ question|escapejs }}`;
-      if (typeof fetchYouTubeVideos === 'function') {
-        fetchYouTubeVideos(userQuestion);
-      } else {
-        console.error('❌ fetchYouTubeVideos is not defined. Check if youtube.js is loading correctly.');
-      }
+<!-- YouTube Script -->
+<script src="{% static 'core/js/youtube.js' %}"></script>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Print solution function
+  function printSolution() {
+    const content = document.querySelector('.book-content').cloneNode(true);
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>SUNMAC AI Solution</title>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+          }
+          .header h1 {
+            color: #667eea;
+            margin: 0;
+          }
+          .question-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+          }
+          .solution-section {
+            padding: 10px 0;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+          }
+          @media print {
+            body {
+              padding: 20px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SUNMAC AI Solution Book</h1>
+          <p>Generated on ${new Date().toLocaleDateString()}</p>
+        </div>
+        ${content.innerHTML}
+        <div class="footer">
+          <p>Powered by SUNMAC Advanced AI Technology</p>
+        </div>
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  // Copy solution to clipboard
+  function copySolution() {
+    const solutionText = document.querySelector('.solution-text').innerText;
+    navigator.clipboard.writeText(solutionText).then(() => {
+      showAlert('Solution copied to clipboard!', 'success');
+    }).catch(() => {
+      showAlert('Failed to copy solution', 'error');
     });
-  </script>
+  }
+
+  // Show alert function
+  function showAlert(message, type) {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.innerHTML = `
+      <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(alert);
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      alert.remove();
+    }, 3000);
+  }
+
+  // Load YouTube videos
+  document.addEventListener('DOMContentLoaded', function() {
+    const userQuestion = `{{ question|escapejs }}`;
+    if (typeof fetchYouTubeVideos === 'function') {
+      fetchYouTubeVideos(userQuestion);
+    } else {
+      console.error('fetchYouTubeVideos is not defined');
+      const container = document.getElementById('youtube-results');
+      if (container) {
+        container.innerHTML = '<p style="text-align: center; color: #dc3545;">Unable to load video recommendations</p>';
+      }
+    }
+  });
+</script>
 {% endblock %}

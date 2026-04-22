@@ -2,70 +2,745 @@
 {% load static %}
 {% block content %}
 
-<section class="section-wrapper">
-  <script src="{% static 'core/js/youtube.js' %}"></script>
+<style>
+  /* Professional gradient background */
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
 
-  <h2>🎓 Student AI Tools</h2>
-  <p>Upload a handwritten math question or type your math problem below. SUNMAC AI will solve it step-by-step.</p>
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label><strong>Upload Handwritten Image (optional):</strong></label><br>
-    <input type="file" name="image"><br><br>
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
 
-    <label><strong>Or type a math question:</strong></label><br>
-    <textarea name="question" rows="5" cols="60" placeholder="e.g. Solve 2x + 5 = 15">{{ question }}</textarea><br><br>
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
 
-    <button type="submit">Solve</button>
-  </form>
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-title i {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    line-height: 1.6;
+  }
+
+  /* Professional form styling */
+  .form-card {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+
+  .form-label i {
+    color: #667eea;
+  }
+
+  .file-upload {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .file-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .file-upload-label:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+  }
+
+  .file-upload-label i {
+    font-size: 24px;
+    color: #667eea;
+  }
+
+  .file-upload-label span {
+    color: #6c757d;
+  }
+
+  .file-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .filename-display {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6c757d;
+    display: none;
+  }
+
+  .filename-display.active {
+    display: block;
+  }
+
+  .help-text {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6c757d;
+  }
+
+  .help-text i {
+    font-size: 12px;
+    margin-right: 4px;
+  }
+
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .divider hr {
+    border: none;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .divider span {
+    background: white;
+    padding: 0 15px;
+    position: relative;
+    top: -12px;
+    color: #6c757d;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  textarea.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    resize: vertical;
+  }
+
+  textarea.form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  /* Professional button */
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* AI Solution Book styling */
+  .ai-solution-book {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 24px;
+    padding: 40px;
+    margin-top: 40px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  }
+
+  .book-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+  }
+
+  .book-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .book-header p {
+    color: #6c757d;
+  }
+
+  .book-content {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+  }
+
+  .question-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border-left: 4px solid #667eea;
+  }
+
+  .question-section strong {
+    color: #667eea;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+  }
+
+  .solution-section {
+    padding: 10px 0;
+  }
+
+  .solution-section strong {
+    color: #28a745;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .solution-text {
+    line-height: 1.8;
+    color: #34495e;
+    font-size: 1rem;
+  }
+
+  .solution-text p {
+    margin-bottom: 15px;
+  }
+
+  /* Print button */
+  .print-btn {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .print-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Loading animation */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .loading-overlay.active {
+    display: flex;
+  }
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 25px;
+    }
+    
+    .hero-title {
+      font-size: 1.8rem;
+    }
+    
+    .form-card,
+    .book-content {
+      padding: 20px;
+    }
+    
+    .ai-solution-book {
+      padding: 20px;
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .hero-section,
+    .form-card,
+    .print-btn,
+    nav,
+    footer {
+      display: none;
+    }
+    
+    .ai-solution-book {
+      background: white;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .book-content {
+      box-shadow: none;
+      padding: 20px;
+    }
+    
+    body {
+      background: white;
+    }
+  }
+
+  /* Alert styles */
+  .alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.5s ease;
+    z-index: 1001;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+  }
+
+  .alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+  }
+
+  .alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+  }
+</style>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-content">
+    <div class="hero-title">
+      <i data-lucide="cpu"></i>
+      <span>AI-Powered Math Solver</span>
+    </div>
+    <div class="hero-subtitle">
+      Experience the future of mathematics education with our advanced AI. 
+      Upload handwritten problems or type them directly - get instant, step-by-step solutions.
+    </div>
+  </div>
 </section>
 
-{% if result %}
-  <section class="ai-book-container">
-    <h2 class="ai-title">📘 SUNMAC AI – Digital Solution Book</h2>
-
-    <div class="ai-book-page" id="book-content">
-      <div class="ai-question">
-        <strong>Question:</strong><br>
-        {{ question }}
+<!-- Main Form Card -->
+<div class="form-card">
+  <form method="POST" enctype="multipart/form-data" id="mathSolverForm">
+    {% csrf_token %}
+    
+    <!-- Image Upload Section -->
+    <div style="margin-bottom: 25px;">
+      <label class="form-label">
+        <i data-lucide="image"></i>
+        Upload Handwritten Image
+      </label>
+      <div class="file-upload">
+        <label class="file-upload-label">
+          <i data-lucide="cloud-upload"></i>
+          <span id="uploadText">Click or drag to upload an image</span>
+          <input type="file" name="image" id="imageInput" class="file-input" accept="image/*">
+        </label>
+        <div class="filename-display" id="filenameDisplay"></div>
       </div>
-      <div class="solution-text">
-        {{ result|linebreaks }}
+      <small class="help-text">
+        <i data-lucide="info"></i> Supports JPG, PNG. Write clearly for best results.
+      </small>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider">
+      <hr>
+      <span><i data-lucide="minus"></i> OR <i data-lucide="minus"></i></span>
+    </div>
+
+    <!-- Typed Question Section -->
+    <div style="margin-bottom: 25px;">
+      <label class="form-label">
+        <i data-lucide="pen-tool"></i>
+        Type Your Math Problem
+      </label>
+      <textarea 
+        name="question" 
+        class="form-control" 
+        rows="5" 
+        placeholder="Example: Solve 2x² + 5x - 3 = 0"
+        id="questionInput"
+      >{{ question }}</textarea>
+      <small class="help-text">
+        <i data-lucide="lightbulb"></i> Tip: Be specific with your problem for better results
+      </small>
+    </div>
+
+    <!-- Instructions Section -->
+    <div style="margin-bottom: 25px;">
+      <label class="form-label">
+        <i data-lucide="message-square"></i>
+        Additional Instructions (Optional)
+      </label>
+      <textarea 
+        name="instructions" 
+        class="form-control" 
+        rows="3" 
+        placeholder="Example: Show all steps, Explain in detail, Use the quadratic formula..."
+        id="instructionsInput"
+      ></textarea>
+      <small class="help-text">
+        <i data-lucide="lightbulb"></i> Tell the AI how to solve: "show steps", "explain briefly", "use substitution method", etc.
+      </small>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn-primary" id="submitBtn">
+      <i data-lucide="sparkles"></i>
+      Solve Problem
+    </button>
+  </form>
+</div>
+
+<!-- AI Solution Display -->
+{% if result %}
+<section class="ai-solution-book">
+  <div class="book-header">
+    <h2>
+      <i data-lucide="book-open"></i> Digital Solution Book
+    </h2>
+    <p>Generated by SUNMAC Advanced AI</p>
+  </div>
+
+  <div class="book-content" id="bookContent">
+    <div class="question-section">
+      <strong>
+        <i data-lucide="help-circle"></i> Problem Statement
+      </strong>
+      <div class="question-text">
+        {{ question|linebreaks }}
       </div>
     </div>
 
-    <button class="print-button" onclick="printBook()">🖨️ Print / Save as PDF</button>
-  </section>
+    <div class="solution-section">
+      <strong>
+        <i data-lucide="lightbulb"></i> Step-by-Step Solution
+      </strong>
+      <div class="solution-text" id="solutionText">
+        {{ result|linebreaks }}
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center;">
+    <button class="print-btn" onclick="printSolution()">
+      <i data-lucide="printer"></i>
+      Print Solution
+    </button>
+  </div>
+</section>
 {% endif %}
 
-<!-- MathJax for LaTeX -->
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
+<!-- MathJax for LaTeX rendering -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
 
-<!-- Print Script -->
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
 <script>
-  function printBook() {
-    const content = document.getElementById('book-content').innerHTML;
-    const cssURL = "{% static 'css/style.css' %}";
+  // Initialize Lucide icons
+  lucide.createIcons();
 
+  // File upload handling
+  const imageInput = document.getElementById('imageInput');
+  const filenameDisplay = document.getElementById('filenameDisplay');
+  const uploadText = document.getElementById('uploadText');
+
+  imageInput.addEventListener('change', function(e) {
+    if (this.files && this.files[0]) {
+      const fileName = this.files[0].name;
+      filenameDisplay.innerHTML = `<i data-lucide="check-circle"></i> Selected: ${fileName}`;
+      filenameDisplay.classList.add('active');
+      uploadText.innerHTML = 'Change file';
+      lucide.createIcons();
+    }
+  });
+
+  // Form submission with loading state
+  const form = document.getElementById('mathSolverForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+
+  form.addEventListener('submit', function(e) {
+    const hasImage = imageInput.files.length > 0;
+    const hasQuestion = document.getElementById('questionInput').value.trim();
+    
+    if (!hasImage && !hasQuestion) {
+      e.preventDefault();
+      showAlert('Please either upload an image or type a math problem.', 'error');
+      return;
+    }
+    
+    // Show loading state
+    loadingOverlay.classList.add('active');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+  });
+
+  // Function to show alerts
+  function showAlert(message, type) {
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.innerHTML = `
+      <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(alertDiv);
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 5000);
+  }
+
+  // Print solution function
+  function printSolution() {
+    const content = document.getElementById('bookContent').innerHTML;
     const printWindow = window.open('', '_blank');
+    
     printWindow.document.write(`
+      <!DOCTYPE html>
       <html>
-        <head>
-          <title>SUNMAC AI – Digital Solution</title>
-          <link rel="stylesheet" href="${cssURL}">
-        </head>
-        <body class="print-book-body">
-          ${content}
-        </body>
+      <head>
+        <title>SUNMAC AI Solution</title>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+          }
+          .header h1 {
+            color: #667eea;
+            margin: 0;
+          }
+          .question-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+          }
+          .solution-section {
+            padding: 10px 0;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+          }
+          @media print {
+            body {
+              padding: 20px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SUNMAC AI Solution Book</h1>
+          <p>Generated on ${new Date().toLocaleDateString()}</p>
+        </div>
+        ${content}
+        <div class="footer">
+          <p>Powered by SUNMAC Advanced AI Technology</p>
+        </div>
+      </body>
       </html>
     `);
+    
     printWindow.document.close();
     printWindow.focus();
     printWindow.print();
   }
+
+  // Auto-resize textarea
+  const textarea = document.getElementById('questionInput');
+  if (textarea) {
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+    });
+  }
+
+  // Display success message if coming from solution
+  {% if result %}
+    setTimeout(function() {
+      showAlert('Solution generated successfully!', 'success');
+      var solutionSection = document.querySelector('.ai-solution-book');
+      if (solutionSection) {
+        solutionSection.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+    }, 500);
+  {% endif %}
 </script>
-<script src="{% static 'core/js/youtube.js' %}"></script>
+
 {% endblock %}

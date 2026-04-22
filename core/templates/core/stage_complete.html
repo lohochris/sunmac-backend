@@ -2,62 +2,501 @@
 {% load static %}
 
 {% block content %}
-<div class="stage-complete-container">
-  <div class="stage-box">
-    <h2>🎉 Stage {{ stage }} Complete!</h2>
-    <p>👏 Well done! You’ve completed this stage.</p>
-    <p>🏆 Current Score: <strong>{{ score }}</strong></p>
-
-    <form method="get" action="{% url 'math_games' %}">
-      <button type="submit" class="next-button">Next Stage ➡️</button>
-    </form>
-  </div>
-</div>
-
 <style>
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
+  }
+
+  /* Main Container */
   .stage-complete-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 70vh;
-    background-color: #f5f5f5;
+    min-height: calc(100vh - 200px);
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
   }
 
+  /* Animated Background */
+  .stage-complete-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  /* Confetti Animation */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary-gradient);
+    animation: confetti-fall 3s linear infinite;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Stage Box */
   .stage-box {
-    background-color: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 50px 40px;
+    box-shadow: var(--shadow-xl);
     text-align: center;
-    max-width: 500px;
-    width: 90%;
+    max-width: 550px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.6s ease;
+    transition: transform 0.3s ease;
   }
 
-  .stage-box h2 {
-    font-size: 30px;
-    margin-bottom: 15px;
-    color: #2d7a3e;
+  .stage-box:hover {
+    transform: translateY(-5px);
   }
 
-  .stage-box p {
-    font-size: 18px;
-    margin: 10px 0;
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
-  .next-button {
-    background-color: #4CAF50;
+  /* Icon Circle */
+  .icon-circle {
+    width: 100px;
+    height: 100px;
+    background: var(--success-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    animation: scaleIn 0.5s ease 0.3s both;
+  }
+
+  @keyframes scaleIn {
+    from {
+      transform: scale(0);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .icon-circle i {
+    width: 50px;
+    height: 50px;
     color: white;
-    font-weight: bold;
-    padding: 12px 25px;
-    font-size: 16px;
+    stroke-width: 1.5;
+  }
+
+  /* Stage Number */
+  .stage-number {
+    font-size: 5rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+
+  /* Title */
+  .stage-box h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Message */
+  .message {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin: 15px 0;
+    line-height: 1.6;
+  }
+
+  /* Score Card */
+  .score-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 25px 0;
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+  }
+
+  .score-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+    margin-bottom: 8px;
+  }
+
+  .score-value {
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .score-value span {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  /* Achievements */
+  .achievements {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+  }
+
+  .achievement-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    color: #28a745;
+  }
+
+  .achievement-badge i {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Next Button */
+  .next-button {
+    background: var(--primary-gradient);
+    color: white;
+    font-weight: 600;
+    padding: 14px 35px;
+    font-size: 1rem;
     border: none;
-    border-radius: 8px;
-    margin-top: 20px;
+    border-radius: 12px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    text-decoration: none;
   }
 
   .next-button:hover {
-    background-color: #388e3c;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
   }
+
+  .next-button:active {
+    transform: translateY(0);
+  }
+
+  /* Share Buttons */
+  .share-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .share-title {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 12px;
+  }
+
+  .share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .share-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+  }
+
+  .share-btn i {
+    width: 20px;
+    height: 20px;
+  }
+
+  .share-btn-twitter {
+    background: #1da1f2;
+    color: white;
+  }
+
+  .share-btn-facebook {
+    background: #4267b2;
+    color: white;
+  }
+
+  .share-btn-linkedin {
+    background: #0077b5;
+    color: white;
+  }
+
+  .share-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stage-box {
+      padding: 30px 25px;
+    }
+    
+    .stage-number {
+      font-size: 3.5rem;
+    }
+    
+    .stage-box h2 {
+      font-size: 1.5rem;
+    }
+    
+    .score-value {
+      font-size: 2.5rem;
+    }
+    
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+    }
+    
+    .icon-circle i {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  /* Fireworks effect */
+  @keyframes firework {
+    0% { transform: translate(var(--x), var(--initialY)); width: var(--initialSize); opacity: 1; }
+    50% { width: 0.5vmin; opacity: 1; }
+    100% { width: var(--finalSize); opacity: 0; }
+  }
+
+  .firework,
+  .firework::before,
+  .firework::after {
+    --initialSize: 0.5vmin;
+    --finalSize: 0.5vmin;
+    --particleSize: 0.2vmin;
+    --color1: yellow;
+    --color2: gold;
+    --color3: lightyellow;
+    --color4: lightgoldenrodyellow;
+    --color5: orange;
+    --y: -30vmin;
+    --x: -50%;
+    --initialY: 60vmin;
+    content: "";
+    animation: firework 2s forwards;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, var(--y));
+    width: var(--initialSize);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, var(--color1) 0%, var(--color2) 25%, var(--color3) 50%, var(--color4) 75%, var(--color5) 100%);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .firework:nth-child(1) { --x: -30%; --y: -40vmin; --color1: #ff6b6b; --color2: #ff8e8e; animation-delay: 0s; }
+  .firework:nth-child(2) { --x: 20%; --y: -50vmin; --color1: #4ecdc4; --color2: #6dd5d5; animation-delay: 0.2s; }
+  .firework:nth-child(3) { --x: 50%; --y: -35vmin; --color1: #ffe66d; --color2: #ffed9e; animation-delay: 0.4s; }
+  .firework:nth-child(4) { --x: -45%; --y: -45vmin; --color1: #a8e6cf; --color2: #c4f0e1; animation-delay: 0.6s; }
+  .firework:nth-child(5) { --x: 35%; --y: -55vmin; --color1: #d4a5a5; --color2: #e2c2c2; animation-delay: 0.8s; }
 </style>
+
+<div class="stage-complete-container">
+  <!-- Fireworks Animation -->
+  <div class="firework"></div>
+  <div class="firework"></div>
+  <div class="firework"></div>
+  <div class="firework"></div>
+  <div class="firework"></div>
+
+  <div class="stage-box">
+    <!-- Animated Icon -->
+    <div class="icon-circle">
+      <i data-lucide="trophy"></i>
+    </div>
+
+    <!-- Stage Number -->
+    <div class="stage-number">
+      Stage {{ stage }}
+    </div>
+
+    <!-- Title -->
+    <h2>
+      <i data-lucide="check-circle"></i>
+      Complete!
+    </h2>
+
+    <!-- Message -->
+    <p class="message">
+      Congratulations on completing this stage! You're making excellent progress in your mathematical journey.
+    </p>
+
+    <!-- Score Card -->
+    <div class="score-card">
+      <div class="score-label">Current Score</div>
+      <div class="score-value">
+        {{ score }}<span>pts</span>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div class="achievements">
+      <div class="achievement-badge">
+        <i data-lucide="star"></i>
+        <span>Stage {{ stage }} Mastered</span>
+      </div>
+      <div class="achievement-badge">
+        <i data-lucide="flame"></i>
+        <span>{{ score }} Points Earned</span>
+      </div>
+    </div>
+
+    <!-- Next Stage Button -->
+    <form method="get" action="{% url 'math_games' %}">
+      <button type="submit" class="next-button">
+        <i data-lucide="arrow-right"></i>
+        Continue to Next Stage
+      </button>
+    </form>
+
+    <!-- Share Section -->
+    <div class="share-section">
+      <div class="share-title">Share Your Achievement</div>
+      <div class="share-buttons">
+        <button class="share-btn share-btn-twitter" onclick="shareAchievement('twitter')">
+          <i data-lucide="twitter"></i>
+        </button>
+        <button class="share-btn share-btn-facebook" onclick="shareAchievement('facebook')">
+          <i data-lucide="facebook"></i>
+        </button>
+        <button class="share-btn share-btn-linkedin" onclick="shareAchievement('linkedin')">
+          <i data-lucide="linkedin"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Generate random confetti particles
+  function createConfetti() {
+    const container = document.querySelector('.stage-complete-container');
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement('div');
+      confetti.classList.add('confetti');
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.animationDelay = Math.random() * 3 + 's';
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      confetti.style.background = `hsl(${Math.random() * 360}, 70%, 50%)`;
+      container.appendChild(confetti);
+      
+      // Remove confetti after animation
+      setTimeout(() => {
+        confetti.remove();
+      }, 5000);
+    }
+  }
+
+  // Share achievement function
+  function shareAchievement(platform) {
+    const text = `I just completed Stage ${parseInt('{{ stage }}')} in SUNMAC Math Games with {{ score }} points! 🎉`;
+    const url = window.location.origin + '{% url "math_games" %}';
+    
+    let shareUrl = '';
+    switch(platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+        break;
+      case 'facebook':
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`;
+        break;
+      case 'linkedin':
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+        break;
+    }
+    
+    if (shareUrl) {
+      window.open(shareUrl, '_blank', 'width=600,height=400');
+    }
+  }
+
+  // Start confetti on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    createConfetti();
+  });
+</script>
+
 {% endblock %}

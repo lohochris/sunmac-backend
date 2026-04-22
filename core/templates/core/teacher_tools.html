@@ -1,28 +1,722 @@
 {% extends "core/base.html" %}
 {% load static %}
 {% block content %}
-  <section class="section-wrapper">
-    <h2>👩‍🏫 Teacher AI Tools</h2>
-    <p>Paste a math problem or concept. SUNMAC AI will help generate a clean teaching aid or explanation for your students.</p>
 
-    <form method="post">
+<style>
+  /* Professional CSS Variables */
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    --border-radius: 20px;
+  }
+
+  /* Main Container */
+  .teacher-tools {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    background: var(--primary-gradient);
+    border-radius: var(--border-radius);
+    padding: 50px 40px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .hero-title i {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.95);
+    line-height: 1.6;
+  }
+
+  /* Form Card */
+  .form-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 35px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow-xl);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 0.6s ease 0.1s both;
+  }
+
+  .form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+  }
+
+  .form-label i {
+    color: #667eea;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+    resize: vertical;
+    line-height: 1.6;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .help-text {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .help-text i {
+    font-size: 0.85rem;
+  }
+
+  /* Template Buttons */
+  .templates-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .templates-title {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .template-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .template-btn {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .template-btn:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* Submit Button */
+  .submit-btn {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* Loading Overlay */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .loading-overlay.active {
+    display: flex;
+  }
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255,255,255,0.3);
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    color: white;
+    font-size: 1rem;
+  }
+
+  /* Teaching Aid Card */
+  .teaching-aid {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+    animation: fadeInUp 0.6s ease 0.2s both;
+    margin-top: 40px;
+  }
+
+  .aid-header {
+    background: var(--primary-gradient);
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .aid-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .aid-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .aid-action-btn {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+  }
+
+  .aid-action-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .aid-content {
+    padding: 35px;
+  }
+
+  .aid-question {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border-left: 4px solid #667eea;
+  }
+
+  .aid-question strong {
+    color: #667eea;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .aid-question-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #2c3e50;
+    font-family: 'Courier New', monospace;
+  }
+
+  .aid-solution {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 16px;
+  }
+
+  .aid-solution strong {
+    color: #28a745;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .aid-solution-text {
+    line-height: 1.8;
+    color: #34495e;
+    font-size: 1rem;
+  }
+
+  .aid-solution-text p {
+    margin-bottom: 15px;
+  }
+
+  /* Toast Notification */
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1100;
+    animation: slideInRight 0.3s ease;
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(100px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .toast-success {
+    border-left: 4px solid #28a745;
+  }
+
+  .toast-success i {
+    color: #28a745;
+  }
+
+  .toast-error {
+    border-left: 4px solid #dc3545;
+  }
+
+  .toast-error i {
+    color: #dc3545;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 30px 25px;
+    }
+    
+    .hero-title {
+      font-size: 1.8rem;
+    }
+    
+    .form-card {
+      padding: 25px;
+    }
+    
+    .aid-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .aid-content {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="teacher-tools">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-title">
+        <i data-lucide="brain"></i>
+        <span>AI Teaching Assistant</span>
+      </div>
+      <div class="hero-subtitle">
+        Generate professional teaching aids, lesson plans, and explanations instantly with our advanced AI. Save hours of preparation time.
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <form method="post" id="teachingAidForm">
       {% csrf_token %}
-      <textarea name="question" rows="5" cols="60" placeholder="Enter a concept or example...">{{ ai_question }}</textarea><br><br>
-      <button type="submit">Generate Teaching Aid</button>
-    </form>
-  </section>
+      
+      <div class="form-label">
+        <i data-lucide="pen-tool"></i>
+        <span>Enter Math Concept or Problem</span>
+      </div>
+      
+      <textarea 
+        name="question" 
+        class="form-control" 
+        rows="6" 
+        placeholder="Example: Quadratic Equations&#10;or&#10;Explain the Pythagorean Theorem with examples&#10;or&#10;How to solve systems of linear equations"
+        id="questionInput"
+      >{{ ai_question }}</textarea>
+      
+      <div class="help-text">
+        <i data-lucide="lightbulb"></i>
+        <span>Be specific for better results. Include grade level if needed (e.g., "Explain fractions for 4th grade")</span>
+      </div>
 
-  {% if ai_answer %}
-    <section class="ai-book-container">
-      <div class="ai-title">📘 AI Teaching Aid</div>
-      <div class="ai-book-page">
-        <div class="ai-question">
-          <strong>Question:</strong><br>{{ ai_question }}
+      <!-- Quick Templates -->
+      <div class="templates-section">
+        <div class="templates-title">
+          <i data-lucide="layout"></i>
+          <span>Quick Templates</span>
         </div>
-        <div class="solution-text">
-          <strong>Teaching Aid:</strong><br>{{ ai_answer }}
+        <div class="template-buttons">
+          <button type="button" class="template-btn" onclick="insertTemplate('algebra')">
+            <i data-lucide="function-square"></i>
+            Algebra
+          </button>
+          <button type="button" class="template-btn" onclick="insertTemplate('geometry')">
+            <i data-lucide="triangle"></i>
+            Geometry
+          </button>
+          <button type="button" class="template-btn" onclick="insertTemplate('calculus')">
+            <i data-lucide="trending-up"></i>
+            Calculus
+          </button>
+          <button type="button" class="template-btn" onclick="insertTemplate('statistics')">
+            <i data-lucide="bar-chart"></i>
+            Statistics
+          </button>
+          <button type="button" class="template-btn" onclick="insertTemplate('lesson-plan')">
+            <i data-lucide="calendar"></i>
+            Lesson Plan
+          </button>
         </div>
       </div>
-    </section>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <i data-lucide="sparkles"></i>
+        Generate Teaching Aid
+      </button>
+    </form>
+  </div>
+
+  <!-- Teaching Aid Result -->
+  {% if ai_answer %}
+  <div class="teaching-aid" id="teachingAid">
+    <div class="aid-header">
+      <h2>
+        <i data-lucide="book-open"></i>
+        AI Teaching Aid
+      </h2>
+      <div class="aid-actions">
+        <button class="aid-action-btn" onclick="copyToClipboard()">
+          <i data-lucide="copy"></i>
+          Copy
+        </button>
+        <button class="aid-action-btn" onclick="printTeachingAid()">
+          <i data-lucide="printer"></i>
+          Print
+        </button>
+        <button class="aid-action-btn" onclick="downloadAsPDF()">
+          <i data-lucide="download"></i>
+          PDF
+        </button>
+      </div>
+    </div>
+    
+    <div class="aid-content" id="aidContent">
+      <div class="aid-question">
+        <strong>
+          <i data-lucide="help-circle"></i>
+          Topic / Question
+        </strong>
+        <div class="aid-question-text">
+          {{ ai_question|linebreaks }}
+        </div>
+      </div>
+
+      <div class="aid-solution">
+        <strong>
+          <i data-lucide="lightbulb"></i>
+          Teaching Guide & Explanation
+        </strong>
+        <div class="aid-solution-text">
+          {{ ai_answer|linebreaks }}
+        </div>
+      </div>
+    </div>
+  </div>
   {% endif %}
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">Generating teaching aid...</div>
+</div>
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // Form submission handling
+  const form = document.getElementById('teachingAidForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const questionInput = document.getElementById('questionInput');
+
+  form.addEventListener('submit', function(e) {
+    const hasQuestion = questionInput.value.trim();
+    
+    if (!hasQuestion) {
+      e.preventDefault();
+      showToast('Please enter a math concept or problem', 'error');
+      return;
+    }
+    
+    // Show loading state
+    loadingOverlay.classList.add('active');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+  });
+
+  // Template insertion
+  function insertTemplate(type) {
+    const templates = {
+      algebra: 'Explain quadratic equations: ax² + bx + c = 0. Include the quadratic formula, examples, and common student mistakes.',
+      geometry: 'Explain the Pythagorean theorem: a² + b² = c². Include visual explanation, real-world examples, and practice problems.',
+      calculus: 'Explain the concept of derivatives. Start with the definition, include power rule, and provide examples of finding derivatives.',
+      statistics: 'Explain mean, median, and mode. Include definitions, calculation methods, and real-world applications.',
+      'lesson-plan': 'Create a 45-minute lesson plan for introducing fractions to 4th grade students. Include objectives, materials, activities, and assessment.'
+    };
+    
+    questionInput.value = templates[type];
+    questionInput.focus();
+    showToast(`Template inserted: ${type}`, 'success');
+  }
+
+  // Copy to clipboard
+  function copyToClipboard() {
+    const content = document.getElementById('aidContent').innerText;
+    navigator.clipboard.writeText(content).then(() => {
+      showToast('Teaching aid copied to clipboard!', 'success');
+    }).catch(() => {
+      showToast('Failed to copy', 'error');
+    });
+  }
+
+  // Print teaching aid
+  function printTeachingAid() {
+    const content = document.getElementById('teachingAid').cloneNode(true);
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>SUNMAC AI Teaching Aid</title>
+        <meta charset="UTF-8">
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+          }
+          .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+          }
+          .header h1 {
+            color: #667eea;
+            margin: 0;
+          }
+          .aid-question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+          }
+          .aid-solution {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+          }
+          .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>SUNMAC AI Teaching Aid</h1>
+          <p>Generated on ${new Date().toLocaleDateString()}</p>
+        </div>
+        ${content.querySelector('.aid-content').innerHTML}
+        <div class="footer">
+          <p>Powered by SUNMAC Advanced AI Technology</p>
+        </div>
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  // Download as PDF
+  function downloadAsPDF() {
+    showToast('PDF generation coming soon!', 'success');
+  }
+
+  // Toast notification
+  function showToast(message, type) {
+    const existingToasts = document.querySelectorAll('.toast');
+    existingToasts.forEach(toast => toast.remove());
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+      <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i>
+      <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
+    lucide.createIcons();
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  // Auto-resize textarea
+  if (questionInput) {
+    questionInput.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 300) + 'px';
+    });
+  }
+</script>
+
 {% endblock %}
