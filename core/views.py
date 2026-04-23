@@ -391,7 +391,11 @@ def book_class_view(request):
 
 @login_required
 def youtube_explore(request):
-    return render(request, 'core/youtube_explore.html')
+    """YouTube video exploration page"""
+    context = {
+        'YOUTUBE_API_KEY': settings.YOUTUBE_API_KEY,
+    }
+    return render(request, 'core/youtube_explore.html', context)
 
 @login_required
 def worksheet_list_view(request):
@@ -935,3 +939,5 @@ def track_progress(request):
     }
     
     return render(request, 'core/track_progress.html', context)
+
+    

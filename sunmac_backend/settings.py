@@ -118,6 +118,7 @@ TEMPLATES = [
                 'django.template.context_processors.csrf',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',  # Add media context
+                #'core.context_processors.api_keys',
             ],
         },
     },
@@ -211,3 +212,5 @@ LOGGING = {
         },
     },
 }
+# YouTube API Configuration
+YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY', '')
