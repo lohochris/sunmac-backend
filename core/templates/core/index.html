@@ -38,7 +38,7 @@
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
       --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
     }
 
@@ -56,90 +56,115 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeInLeft {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes fadeInRight {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    /* ========== NAVBAR ========== */
+    /* ========== PROFESSIONAL NAVBAR (ISC2 STYLE) ========== */
     .navbar {
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(10px);
-      padding: 1rem 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: var(--shadow-sm);
-      flex-wrap: wrap;
-      gap: 1rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
     }
 
     .logo {
-      width: 45px;
-      height: 45px;
+      width: 40px;
+      height: 40px;
       background: var(--gradient-primary);
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      font-weight: 800;
+      font-size: 1.25rem;
+      font-weight: 700;
       color: white;
     }
 
     .brand {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-left: 10px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      letter-spacing: -0.01em;
     }
 
-    .nav-links {
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+
+    .nav-toggle i {
+      width: 24px;
+      height: 24px;
+      color: #4b5563;
+    }
+
+    .nav-menu {
+      display: flex;
+    }
+
+    .nav-list {
       display: flex;
       align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
 
-    .nav-links a {
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      color: #4b5563;
       text-decoration: none;
-      color: var(--dark);
       font-weight: 500;
-      transition: color 0.3s ease;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+      border-radius: 8px;
     }
 
-    .nav-links a:hover {
-      color: var(--primary);
+    .nav-link i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .nav-link:hover {
+      color: #4f46e5;
+      background: #f3f4f6;
     }
 
     .signup-btn {
       background: var(--gradient-primary);
-      color: white;
-      border: none;
-      padding: 0.5rem 1.2rem;
+      color: white !important;
+      padding: 0.5rem 1.25rem;
       border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
     }
 
     .signup-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      background: #4f46e5;
+      transform: translateY(-1px);
     }
 
-    /* ========== HERO SECTION WITH CAROUSEL ========== */
+    /* ========== HERO SECTION ========== */
     .hero {
       min-height: 90vh;
       display: flex;
@@ -590,20 +615,30 @@
       padding: 2rem;
     }
 
-    /* Responsive */
+    /* ========== RESPONSIVE DESIGN ========== */
     @media (max-width: 968px) {
       .hero {
         flex-direction: column;
         text-align: center;
         gap: 2rem;
+        padding: 3rem 5%;
       }
       
       .hero-content h1 {
         font-size: 2rem;
       }
       
+      .hero-content {
+        max-width: 100%;
+      }
+      
+      .cta-group {
+        justify-content: center;
+      }
+      
       .about-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
       }
       
       .contact-grid {
@@ -620,33 +655,133 @@
         height: 250px;
       }
     }
+
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 1rem;
+      }
+      
+      .nav-toggle {
+        display: block;
+      }
+      
+      .nav-menu {
+        position: fixed;
+        top: 73px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 73px);
+        background: white;
+        transition: left 0.3s ease;
+        z-index: 999;
+        overflow-y: auto;
+      }
+      
+      .nav-menu.active {
+        left: 0;
+      }
+      
+      .nav-list {
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1rem;
+        align-items: stretch;
+      }
+      
+      .nav-link {
+        width: 100%;
+        padding: 0.75rem;
+        justify-content: flex-start;
+      }
+      
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .about-stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .section-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .cta-section {
+        margin: 2rem 5%;
+        padding: 3rem 5%;
+      }
+      
+      .cta-section h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-content h1 {
+        font-size: 1.5rem;
+      }
+      
+      .hero-content p {
+        font-size: 0.9rem;
+      }
+      
+      .btn-primary, .btn-outline {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.875rem;
+      }
+      
+      .service-card h3, .tool-card h3 {
+        font-size: 1.1rem;
+      }
+      
+      .stat-number {
+        font-size: 1.8rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<header class="navbar">
-  <div style="display: flex; align-items: center;">
-    <div class="logo">S</div>
-    <span class="brand">SUNMAC</span>
+<!-- Professional Navbar (ISC2 Style) -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="#home" class="logo-link">
+        <div class="logo">S</div>
+        <span class="brand">SUNMAC</span>
+      </a>
+    </div>
+    
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+      <i data-lucide="menu"></i>
+    </button>
+    
+    <div class="nav-menu" id="navMenu">
+      <ul class="nav-list">
+        <li><a href="#home" class="nav-link">Home</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#tools" class="nav-link">Explore Tools</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+        {% if user.is_authenticated %}
+          <li>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+              {% csrf_token %}
+              <button class="nav-link signup-btn" type="submit" style="background: var(--gradient-primary); color: white;">Logout</button>
+            </form>
+          </li>
+        {% else %}
+          <li><a href="{% url 'login' %}" class="nav-link signup-btn">Login</a></li>
+          <li><a href="{% url 'signup' %}" class="nav-link signup-btn">Sign Up</a></li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
-  <div class="nav-links">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#tools">Explore Tools</a>
-    <a href="#contact">Contact</a>
-    {% if user.is_authenticated %}
-      <form method="post" action="{% url 'logout' %}" style="display:inline;">
-        {% csrf_token %}
-        <button class="signup-btn" type="submit">Logout</button>
-      </form>
-    {% else %}
-      <a href="{% url 'login' %}"><button class="signup-btn">Login</button></a>
-      <a href="{% url 'signup' %}"><button class="signup-btn">Sign Up</button></a>
-    {% endif %}
-  </div>
-</header>
+</nav>
 
 <!-- Marquee -->
 <div class="marquee">
@@ -673,13 +808,11 @@
   </div>
   <div class="hero-carousel">
     <div class="carousel-slides" id="carouselSlides">
-     <div class="carousel-slides" id="carouselSlides">
-  <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop');"></div>
-  <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop');"></div>
-  <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop');"></div>
-  <div class="carousel-slide" style="background-image: url('https://media.istockphoto.com/id/2166782274/photo/students-on-painting-on-classroom-at-school.webp?w=800&h=500&fit=crop');"></div>
-  <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop');"></div>
-</div>
+      <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop');"></div>
+      <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop');"></div>
+      <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop');"></div>
+      <div class="carousel-slide" style="background-image: url('https://media.istockphoto.com/id/2166782274/photo/students-on-painting-on-classroom-at-school.webp?w=800&h=500&fit=crop');"></div>
+      <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop');"></div>
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
   </div>
@@ -837,7 +970,7 @@
 
 <!-- Footer -->
 <footer class="footer">
-  <p>&copy; 2025 SUNMAC. All rights reserved. Designed for intelligent learning.</p>
+  <p>&copy; 2026 SUNMAC. All rights reserved. Designed for intelligent learning.</p>
   <p>Developed by <strong>INFORTECHMATICS</strong> | Crafted with vision by <strong>Loho Christopher</strong></p>
 </footer>
 
@@ -845,52 +978,85 @@
   // Initialize Lucide icons
   lucide.createIcons();
 
+  // Mobile navigation toggle
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+  
+  if (navToggle) {
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+      const icon = navToggle.querySelector('i');
+      if (navMenu.classList.contains('active')) {
+        icon.setAttribute('data-lucide', 'x');
+      } else {
+        icon.setAttribute('data-lucide', 'menu');
+      }
+      lucide.createIcons();
+    });
+  }
+
+  // Close mobile menu when clicking a link
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        navMenu.classList.remove('active');
+        const icon = navToggle.querySelector('i');
+        if (icon) {
+          icon.setAttribute('data-lucide', 'menu');
+          lucide.createIcons();
+        }
+      }
+    });
+  });
+
   // Hero Carousel Functionality
   const slides = document.querySelectorAll('.carousel-slide');
   const dotsContainer = document.getElementById('carouselDots');
   let currentSlide = 0;
   let slideInterval;
 
-  // Create dots
-  slides.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.classList.add('dot');
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => goToSlide(index));
-    dotsContainer.appendChild(dot);
-  });
+  if (slides.length > 0 && dotsContainer) {
+    slides.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (index === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
 
-  const dots = document.querySelectorAll('.dot');
+    const dots = document.querySelectorAll('.dot');
 
-  function goToSlide(index) {
-    slides[currentSlide].classList.remove('active');
-    dots[currentSlide].classList.remove('active');
-    currentSlide = index;
-    slides[currentSlide].classList.add('active');
-    dots[currentSlide].classList.add('active');
+    function goToSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = index;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+      let next = currentSlide + 1;
+      if (next >= slides.length) next = 0;
+      goToSlide(next);
+    }
+
+    function startCarousel() {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopCarousel() {
+      clearInterval(slideInterval);
+    }
+
+    startCarousel();
+
+    const carousel = document.querySelector('.hero-carousel');
+    if (carousel) {
+      carousel.addEventListener('mouseenter', stopCarousel);
+      carousel.addEventListener('mouseleave', startCarousel);
+    }
   }
-
-  function nextSlide() {
-    let next = currentSlide + 1;
-    if (next >= slides.length) next = 0;
-    goToSlide(next);
-  }
-
-  // Auto-advance slides every 5 seconds
-  function startCarousel() {
-    slideInterval = setInterval(nextSlide, 5000);
-  }
-
-  function stopCarousel() {
-    clearInterval(slideInterval);
-  }
-
-  startCarousel();
-
-  // Pause on hover
-  const carousel = document.querySelector('.hero-carousel');
-  carousel.addEventListener('mouseenter', stopCarousel);
-  carousel.addEventListener('mouseleave', startCarousel);
 </script>
 
 </body>
