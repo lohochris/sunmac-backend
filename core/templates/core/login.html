@@ -86,7 +86,7 @@
 
     .form-control {
       width: 100%;
-      padding: 12px 15px 12px 45px;
+      padding: 12px 45px 12px 45px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
       font-size: 14px;
@@ -194,6 +194,18 @@
       display: block;
       margin-top: 10px;
     }
+
+    /* Field error styling */
+    .field-error {
+      color: #f44336;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    input.error {
+      border-color: #f44336;
+    }
   </style>
 </head>
 <body>
@@ -214,7 +226,7 @@
         {% endfor %}
       {% endif %}
 
-      <!-- Display form errors -->
+      <!-- Display form non-field errors -->
       {% if form.non_field_errors %}
         <div class="error-message">
           <i class="fas fa-exclamation-triangle"></i>
@@ -227,26 +239,34 @@
       <form method="post" class="signup-form">
         {% csrf_token %}
         
+        <!-- Username Field -->
         <div class="form-group">
-          <label for="id_username">
+          <label for="{{ form.username.id_for_label }}">
             <i class="fas fa-user"></i> Username
           </label>
           <div class="input-wrapper">
             <i class="fas fa-user"></i>
-            <input type="text" name="username" id="id_username" class="form-control" placeholder="Enter your username" required autofocus>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <span class="field-error">{{ form.username.errors.0 }}</span>
+            {% endif %}
           </div>
         </div>
 
+        <!-- Password Field -->
         <div class="form-group">
-          <label for="id_password">
+          <label for="{{ form.password.id_for_label }}">
             <i class="fas fa-lock"></i> Password
           </label>
           <div class="input-wrapper">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
-            <button type="button" class="toggle-password" data-target="id_password">
+            {{ form.password }}
+            <button type="button" class="toggle-password" data-target="{{ form.password.id_for_label }}">
               <i class="far fa-eye-slash"></i>
             </button>
+            {% if form.password.errors %}
+              <span class="field-error">{{ form.password.errors.0 }}</span>
+            {% endif %}
           </div>
         </div>
 
@@ -275,18 +295,27 @@
       button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
         const input = document.getElementById(targetId);
-        const icon = this.querySelector('i');
-        
-        if (input.type === 'password') {
-          input.type = 'text';
-          icon.classList.remove('fa-eye-slash');
-          icon.classList.add('fa-eye');
-        } else {
-          input.type = 'password';
-          icon.classList.remove('fa-eye');
-          icon.classList.add('fa-eye-slash');
+        if (input) {
+          const icon = this.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+          }
         }
       });
+    });
+
+    // Add error class styling to fields with errors
+    document.querySelectorAll('.field-error').forEach(error => {
+      const input = error.previousElementSibling;
+      if (input && input.tagName === 'INPUT') {
+        input.classList.add('error');
+      }
     });
   </script>
 </body>

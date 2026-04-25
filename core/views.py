@@ -16,16 +16,20 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 import json
+import logging
+
+# Set up logging for debugging
+logger = logging.getLogger(__name__)
 
 from .models import Profile, QueryLog, LiveClassBooking
-from .forms import LiveClassBookingForm
+from .forms import LiveClassBookingForm, CustomUserCreationForm
 import pytesseract
 
 from reportlab.lib.pagesizes import A4
@@ -69,16 +73,6 @@ def generate_pdf(request, question, solution):
     pisa.CreatePDF(html, dest=response)
     return response
 
-# ============================ Forms ============================
-
-class CustomUserCreationForm(UserCreationForm):
-    ROLE_CHOICES = (('student', 'Student'), ('teacher', 'Teacher'))
-    role = forms.ChoiceField(choices=ROLE_CHOICES)
-
-    class Meta:
-        model = User
-        fields = ['username', 'password1', 'password2', 'role']
-
 # ============================ Authentication Views ============================
 
 def signup_view(request):
@@ -88,6 +82,9 @@ def signup_view(request):
             try:
                 user = form.save()
                 role = form.cleaned_data['role']
+                
+                # Log successful user creation
+                logger.info(f"User created: {user.username} with role: {role}")
                 
                 # Check if profile already exists before creating
                 profile, created = Profile.objects.get_or_create(
@@ -99,6 +96,9 @@ def signup_view(request):
                     # Profile already exists, update the role
                     profile.role = role
                     profile.save()
+                    logger.info(f"Profile updated for user: {user.username}")
+                else:
+                    logger.info(f"Profile created for user: {user.username}")
                 
                 # Add success message
                 messages.success(request, 'Account created successfully! Please log in with your credentials.')
@@ -109,23 +109,29 @@ def signup_view(request):
                 # If error occurs, delete the user to avoid orphaned records
                 if 'user' in locals():
                     user.delete()
+                    logger.error(f"Error creating account, user deleted: {str(e)}")
                 messages.error(request, f'Error creating account: {str(e)}')
         else:
             # Form has errors, they will be displayed in the template
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f'{field}: {error}')
+                    logger.warning(f"Signup error - {field}: {error}")
     else:
         form = CustomUserCreationForm()
     
     return render(request, 'core/signup.html', {'form': form})
 
+
 class RoleBasedLoginView(LoginView):
     template_name = 'core/login.html'
     redirect_authenticated_user = True
+    authentication_form = AuthenticationForm
     
     def get_success_url(self):
         user = self.request.user
+        logger.info(f"User logged in: {user.username}")
+        
         if user.is_superuser:
             return reverse('dashboard')
         
@@ -140,15 +146,20 @@ class RoleBasedLoginView(LoginView):
         except Profile.DoesNotExist:
             # Create profile if it doesn't exist (for superusers or old accounts)
             Profile.objects.create(user=user, role='student')
+            logger.info(f"Profile created for existing user: {user.username}")
             return reverse('dashboard')
     
     def form_invalid(self, form):
+        # Log failed login attempts for debugging
+        username = self.request.POST.get('username', 'Unknown')
+        logger.warning(f"Failed login attempt for username: {username}")
         messages.error(self.request, 'Invalid username or password. Please try again.')
         return super().form_invalid(form)
     
     def form_valid(self, form):
         messages.success(self.request, f'Welcome back, {form.get_user().username}!')
         return super().form_valid(form)
+
 
 # ============================ Dashboard & Tool Views ============================
 
@@ -939,5 +950,3 @@ def track_progress(request):
     }
     
     return render(request, 'core/track_progress.html', context)
-
-    

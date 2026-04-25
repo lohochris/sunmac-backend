@@ -75,17 +75,18 @@
       align-items: center;
     }
 
-    .input-wrapper i {
+    .input-wrapper i:first-child {
       position: absolute;
       left: 15px;
       color: #999;
       font-size: 18px;
       pointer-events: none;
+      z-index: 1;
     }
 
     .form-control {
       width: 100%;
-      padding: 12px 15px 12px 45px;
+      padding: 12px 45px 12px 45px;
       border: 2px solid #e0e0e0;
       border-radius: 10px;
       font-size: 14px;
@@ -228,13 +229,15 @@
       text-decoration: underline;
     }
 
-    select.form-control {
-      appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 15px center;
-      background-size: 16px;
-      padding-right: 45px;
+    .field-error {
+      color: #f44336;
+      font-size: 12px;
+      margin-top: 5px;
+      display: block;
+    }
+
+    input.error, select.error {
+      border-color: #f44336;
     }
   </style>
 </head>
@@ -259,43 +262,63 @@
       <form method="post" class="signup-form" id="signupForm">
         {% csrf_token %}
         
+        <!-- Username Field -->
         <div class="form-group">
-          <label for="id_username">
+          <label for="{{ form.username.id_for_label }}">
             <i class="fas fa-user"></i> Username
           </label>
           <div class="input-wrapper">
             <i class="fas fa-user"></i>
-            <input type="text" name="username" id="id_username" class="form-control" placeholder="Choose a username" required autofocus>
+            {{ form.username }}
+            {% if form.username.errors %}
+              <span class="field-error">{{ form.username.errors.0 }}</span>
+            {% endif %}
           </div>
           <div class="help-text">150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
-          {% if form.username.errors %}
-            <div class="error-message" style="margin-top: 5px; padding: 8px;">{{ form.username.errors.0 }}</div>
-          {% endif %}
         </div>
 
+        <!-- Email Field -->
         <div class="form-group">
-          <label for="id_role">
+          <label for="{{ form.email.id_for_label }}">
+            <i class="fas fa-envelope"></i> Email
+          </label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope"></i>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <span class="field-error">{{ form.email.errors.0 }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Role Field -->
+        <div class="form-group">
+          <label for="{{ form.role.id_for_label }}">
             <i class="fas fa-user-tag"></i> Role
           </label>
           <div class="input-wrapper">
             <i class="fas fa-user-tag"></i>
-            <select name="role" id="id_role" class="form-control" required>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
+            {{ form.role }}
+            {% if form.role.errors %}
+              <span class="field-error">{{ form.role.errors.0 }}</span>
+            {% endif %}
           </div>
         </div>
 
+        <!-- Password Field -->
         <div class="form-group">
-          <label for="id_password1">
+          <label for="{{ form.password1.id_for_label }}">
             <i class="fas fa-lock"></i> Password
           </label>
           <div class="input-wrapper">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password1" id="id_password1" class="form-control" placeholder="Enter your password" required>
-            <button type="button" class="toggle-password" data-target="id_password1">
+            {{ form.password1 }}
+            <button type="button" class="toggle-password" data-target="{{ form.password1.id_for_label }}">
               <i class="far fa-eye-slash"></i>
             </button>
+            {% if form.password1.errors %}
+              <span class="field-error">{{ form.password1.errors.0 }}</span>
+            {% endif %}
           </div>
           <div class="password-requirements">
             <i class="fas fa-info-circle"></i> Password requirements:
@@ -305,26 +328,24 @@
               <li>Can't be too similar to your personal info</li>
             </ul>
           </div>
-          {% if form.password1.errors %}
-            <div class="error-message" style="margin-top: 5px; padding: 8px;">{{ form.password1.errors.0 }}</div>
-          {% endif %}
         </div>
 
+        <!-- Confirm Password Field -->
         <div class="form-group">
-          <label for="id_password2">
+          <label for="{{ form.password2.id_for_label }}">
             <i class="fas fa-lock"></i> Confirm Password
           </label>
           <div class="input-wrapper">
             <i class="fas fa-lock"></i>
-            <input type="password" name="password2" id="id_password2" class="form-control" placeholder="Confirm your password" required>
-            <button type="button" class="toggle-password" data-target="id_password2">
+            {{ form.password2 }}
+            <button type="button" class="toggle-password" data-target="{{ form.password2.id_for_label }}">
               <i class="far fa-eye-slash"></i>
             </button>
+            {% if form.password2.errors %}
+              <span class="field-error">{{ form.password2.errors.0 }}</span>
+            {% endif %}
           </div>
           <div class="password-match-status" id="passwordMatchStatus"></div>
-          {% if form.password2.errors %}
-            <div class="error-message" style="margin-top: 5px; padding: 8px;">{{ form.password2.errors.0 }}</div>
-          {% endif %}
         </div>
 
         <button type="submit">
@@ -349,54 +370,72 @@
       button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
         const input = document.getElementById(targetId);
-        const icon = this.querySelector('i');
-        
-        if (input.type === 'password') {
-          input.type = 'text';
-          icon.classList.remove('fa-eye-slash');
-          icon.classList.add('fa-eye');
-        } else {
-          input.type = 'password';
-          icon.classList.remove('fa-eye');
-          icon.classList.add('fa-eye-slash');
+        if (input) {
+          const icon = this.querySelector('i');
+          if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+          } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+          }
         }
       });
     });
 
     // Real-time password match checking
-    const password1 = document.getElementById('id_password1');
-    const password2 = document.getElementById('id_password2');
+    const password1 = document.getElementById('{{ form.password1.id_for_label }}');
+    const password2 = document.getElementById('{{ form.password2.id_for_label }}');
     const matchStatus = document.getElementById('passwordMatchStatus');
 
     function checkPasswordMatch() {
-      if (password1.value === '' && password2.value === '') {
-        matchStatus.innerHTML = '';
-        matchStatus.className = 'password-match-status';
-      } else if (password1.value === password2.value && password1.value !== '') {
-        matchStatus.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
-        matchStatus.className = 'password-match-status match-success';
-      } else if (password2.value !== '') {
-        matchStatus.innerHTML = '<i class="fas fa-times-circle"></i> Passwords do not match';
-        matchStatus.className = 'password-match-status match-error';
+      if (password1 && password2) {
+        if (password1.value === '' && password2.value === '') {
+          matchStatus.innerHTML = '';
+          matchStatus.className = 'password-match-status';
+        } else if (password1.value === password2.value && password1.value !== '') {
+          matchStatus.innerHTML = '<i class="fas fa-check-circle"></i> Passwords match';
+          matchStatus.className = 'password-match-status match-success';
+        } else if (password2.value !== '') {
+          matchStatus.innerHTML = '<i class="fas fa-times-circle"></i> Passwords do not match';
+          matchStatus.className = 'password-match-status match-error';
+        }
       }
     }
 
-    password1.addEventListener('keyup', checkPasswordMatch);
-    password2.addEventListener('keyup', checkPasswordMatch);
+    if (password1 && password2) {
+      password1.addEventListener('keyup', checkPasswordMatch);
+      password2.addEventListener('keyup', checkPasswordMatch);
+    }
 
     // Form validation before submit
     document.getElementById('signupForm').addEventListener('submit', function(e) {
-      if (password1.value !== password2.value) {
-        e.preventDefault();
-        alert('Passwords do not match!');
-        return false;
-      }
-      if (password1.value.length < 8) {
-        e.preventDefault();
-        alert('Password must be at least 8 characters long!');
-        return false;
+      if (password1 && password2) {
+        if (password1.value !== password2.value) {
+          e.preventDefault();
+          alert('Passwords do not match!');
+          return false;
+        }
+        if (password1.value.length < 8) {
+          e.preventDefault();
+          alert('Password must be at least 8 characters long!');
+          return false;
+        }
       }
       return true;
+    });
+
+    // Add error class styling to fields with errors
+    document.querySelectorAll('.field-error').forEach(error => {
+      const wrapper = error.closest('.form-group');
+      if (wrapper) {
+        const input = wrapper.querySelector('input, select');
+        if (input) {
+          input.classList.add('error');
+        }
+      }
     });
   </script>
 </body>

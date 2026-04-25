@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
   <meta name="description" content="SUNMAC - Strategic Upgrade Network for Mathematics and AI Competence. Empowering mathematics education with AI.">
   <meta name="keywords" content="AI Math Solver, Mathematics Education, AI Learning, STEM">
   <meta name="author" content="INFORTECHMATICS">
@@ -264,7 +264,7 @@
       transform: translateY(-2px);
     }
 
-    /* Hero Carousel */
+    /* Hero Carousel - Mobile Optimized */
     .hero-carousel {
       flex: 1;
       position: relative;
@@ -287,13 +287,17 @@
       height: 100%;
       opacity: 0;
       transition: opacity 1s ease-in-out;
-      background-size: cover;
-      background-position: center;
-      border-radius: var(--border-radius);
     }
 
     .carousel-slide.active {
       opacity: 1;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
     }
 
     .carousel-dots {
@@ -741,6 +745,10 @@
       .stat-number {
         font-size: 1.8rem;
       }
+      
+      .hero-carousel {
+        height: 200px;
+      }
     }
   </style>
 </head>
@@ -786,11 +794,11 @@
 <!-- Marquee -->
 <div class="marquee">
   <div class="marquee-content">
-    Welcome to SUNMAC — Strategic Upgrade Network for Mathematics and AI Competence — Where Mathematics Meets Innovation & AI
+    SUNMAC — Where Mathematics Meets Innovation & AI | Strategic Upgrade Network for Mathematics and AI Competence | Empowering the Future of Learning
   </div>
 </div>
 
-<!-- Hero Section with Carousel -->
+<!-- Hero Section with Carousel - Mobile Optimized -->
 <section class="hero" id="home">
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -808,11 +816,46 @@
   </div>
   <div class="hero-carousel">
     <div class="carousel-slides" id="carouselSlides">
-      <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop');"></div>
-      <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop');"></div>
-      <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop');"></div>
-      <div class="carousel-slide" style="background-image: url('https://media.istockphoto.com/id/2166782274/photo/students-on-painting-on-classroom-at-school.webp?w=800&h=500&fit=crop');"></div>
-      <div class="carousel-slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop');"></div>
+      <div class="carousel-slide active">
+        <img src="https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop" 
+             srcset="https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=400&h=250&fit=crop 400w,
+                     https://images.unsplash.com/photo-1541178735493-479c1a27ed24?w=800&h=500&fit=crop 800w"
+             sizes="(max-width: 768px) 400px, 800px"
+             alt="Student studying mathematics" 
+             loading="eager">
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop"
+             srcset="https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400&h=250&fit=crop 400w,
+                     https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&h=500&fit=crop 800w"
+             sizes="(max-width: 768px) 400px, 800px"
+             alt="Mathematics on whiteboard"
+             loading="lazy">
+      </div>
+      <div class="carousel-slide">
+        <img src="https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop"
+             srcset="https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=400&h=250&fit=crop 400w,
+                     https://plus.unsplash.com/premium_photo-1742404279171-8fb785d84414?w=800&h=500&fit=crop 800w"
+             sizes="(max-width: 768px) 400px, 800px"
+             alt="Professor teaching mathematics"
+             loading="lazy">
+      </div>
+      <div class="carousel-slide">
+  <img src="https://images.unsplash.com/photo-1758270705172-07b53627dfcb?w=800&h=500&fit=crop"
+       srcset="https://images.unsplash.com/photo-1758270705172-07b53627dfcb?w=400&h=250&fit=crop 400w,
+               https://images.unsplash.com/photo-1758270705172-07b53627dfcb?w=800&h=500&fit=crop 800w"
+       sizes="(max-width: 768px) 400px, 800px"
+       alt="Students collaborating in classroom"
+       loading="lazy">
+</div>
+      <div class="carousel-slide">
+        <img src="https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop"
+             srcset="https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=400&h=250&fit=crop 400w,
+                     https://plus.unsplash.com/premium_photo-1723795235613-5095734b7b00?w=800&h=500&fit=crop 800w"
+             sizes="(max-width: 768px) 400px, 800px"
+             alt="Modern education technology"
+             loading="lazy">
+      </div>
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
   </div>
@@ -1010,7 +1053,7 @@
     });
   });
 
-  // Hero Carousel Functionality
+  // Hero Carousel Functionality - Mobile Optimized
   const slides = document.querySelectorAll('.carousel-slide');
   const dotsContainer = document.getElementById('carouselDots');
   let currentSlide = 0;
@@ -1042,11 +1085,12 @@
     }
 
     function startCarousel() {
+      if (slideInterval) clearInterval(slideInterval);
       slideInterval = setInterval(nextSlide, 5000);
     }
 
     function stopCarousel() {
-      clearInterval(slideInterval);
+      if (slideInterval) clearInterval(slideInterval);
     }
 
     startCarousel();
@@ -1055,6 +1099,9 @@
     if (carousel) {
       carousel.addEventListener('mouseenter', stopCarousel);
       carousel.addEventListener('mouseleave', startCarousel);
+      // Touch events for mobile
+      carousel.addEventListener('touchstart', stopCarousel);
+      carousel.addEventListener('touchend', startCarousel);
     }
   }
 </script>
