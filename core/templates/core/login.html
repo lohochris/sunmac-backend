@@ -24,16 +24,16 @@
       padding: 20px;
     }
 
-    .signup-section {
+    .login-container {
       width: 100%;
       max-width: 450px;
     }
 
-    .section-wrapper {
+    .login-card {
       background: white;
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border-radius: 24px;
+      padding: 45px 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       animation: fadeInUp 0.5s ease;
     }
 
@@ -48,37 +48,40 @@
       }
     }
 
-    h2 {
+    .login-header {
       text-align: center;
-      color: #1a237e;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
+    }
+
+    .login-header h2 {
       font-size: 28px;
-      font-weight: 600;
-    }
-
-    .form-group {
-      margin-bottom: 25px;
-      position: relative;
-    }
-
-    label {
-      display: block;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       margin-bottom: 8px;
-      color: #333;
-      font-weight: 500;
+    }
+
+    .login-header p {
+      color: #6b7280;
       font-size: 14px;
     }
 
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
+    .form-group {
+      margin-bottom: 24px;
     }
 
-    .input-wrapper i:first-child {
+    .input-group {
+      position: relative;
+    }
+
+    .input-group i {
       position: absolute;
-      left: 15px;
-      color: #999;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
       font-size: 18px;
       pointer-events: none;
       z-index: 1;
@@ -86,235 +89,299 @@
 
     .form-control {
       width: 100%;
-      padding: 12px 45px 12px 45px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 14px;
+      padding: 14px 16px 14px 48px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 15px;
       transition: all 0.3s ease;
       font-family: inherit;
+      background: #f9fafb;
+    }
+
+    .form-control:-webkit-autofill,
+    .form-control:-webkit-autofill:hover,
+    .form-control:-webkit-autofill:focus,
+    .form-control:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px #f9fafb inset !important;
+      box-shadow: 0 0 0 30px #f9fafb inset !important;
     }
 
     .form-control:focus {
       outline: none;
-      border-color: #1a237e;
-      box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+      border-color: #4f46e5;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
     }
 
-    .toggle-password {
-      position: absolute;
-      right: 15px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #999;
-      font-size: 18px;
-      padding: 0;
+    .form-control.error {
+      border-color: #ef4444;
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .checkbox-label {
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: color 0.3s ease;
-      z-index: 2;
-    }
-
-    .toggle-password:hover {
-      color: #1a237e;
-    }
-
-    button[type="submit"] {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
+      gap: 8px;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-top: 10px;
-    }
-
-    button[type="submit"]:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
-    }
-
-    .error-message {
-      background: #ffebee;
-      color: #f44336;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #f44336;
       font-size: 14px;
+      color: #4b5563;
     }
 
-    .success-message {
-      background: #e8f5e9;
-      color: #4caf50;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #4caf50;
-      font-size: 14px;
+    .checkbox-label input {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #4f46e5;
     }
 
-    .info-message {
-      background: #e3f2fd;
-      color: #2196f3;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #2196f3;
-      font-size: 14px;
-    }
-
-    .links {
-      text-align: center;
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
-    }
-
-    .links a {
-      color: #1a237e;
+    .forgot-link {
+      color: #4f46e5;
       text-decoration: none;
+      font-size: 14px;
       font-weight: 500;
       transition: color 0.3s ease;
-      display: inline-block;
-      margin: 5px 0;
     }
 
-    .links a:hover {
-      color: #283593;
+    .forgot-link:hover {
+      color: #7c3aed;
       text-decoration: underline;
     }
 
-    .forgot-password {
-      display: block;
-      margin-top: 10px;
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
     }
 
-    /* Field error styling */
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .divider {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider span {
+      background: white;
+      padding: 0 16px;
+      position: relative;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .signup-link {
+      text-align: center;
+    }
+
+    .signup-link p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .signup-link a {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-link a:hover {
+      color: #7c3aed;
+      text-decoration: underline;
+    }
+
+    .alert {
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left: 4px solid #dc2626;
+    }
+
+    .alert-success {
+      background: #ecfdf5;
+      color: #059669;
+      border-left: 4px solid #059669;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      color: #2563eb;
+      border-left: 4px solid #2563eb;
+    }
+
     .field-error {
-      color: #f44336;
+      color: #dc2626;
       font-size: 12px;
-      margin-top: 5px;
+      margin-top: 6px;
       display: block;
     }
 
-    input.error {
-      border-color: #f44336;
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 24px;
+      }
+      
+      .login-header h2 {
+        font-size: 24px;
+      }
+      
+      .form-options {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
-  <section class="signup-section">
-    <div class="section-wrapper">
-      <h2>
-        <i class="fas fa-graduation-cap" style="margin-right: 10px;"></i>
-        Welcome Back
-      </h2>
-      
-      <!-- Display messages -->
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Member Login</h2>
+        <p>Welcome back! Please enter your details</p>
+      </div>
+
       {% if messages %}
         {% for message in messages %}
-          <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
-            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}" style="margin-right: 8px;"></i>
-            {{ message }}
+          <div class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
           </div>
         {% endfor %}
       {% endif %}
 
-      <!-- Display form non-field errors -->
       {% if form.non_field_errors %}
-        <div class="error-message">
+        <div class="alert alert-error">
           <i class="fas fa-exclamation-triangle"></i>
           {% for error in form.non_field_errors %}
-            {{ error }}
+            <span>{{ error }}</span>
           {% endfor %}
         </div>
       {% endif %}
 
-      <form method="post" class="signup-form">
+      <form method="post" class="login-form" action="{% url 'login' %}">
         {% csrf_token %}
         
         <!-- Username Field -->
         <div class="form-group">
-          <label for="{{ form.username.id_for_label }}">
-            <i class="fas fa-user"></i> Username
-          </label>
-          <div class="input-wrapper">
+          <div class="input-group">
             <i class="fas fa-user"></i>
-            {{ form.username }}
-            {% if form.username.errors %}
-              <span class="field-error">{{ form.username.errors.0 }}</span>
-            {% endif %}
+            <input type="text" 
+                   name="username" 
+                   id="id_username" 
+                   class="form-control" 
+                   placeholder="Username" 
+                   autocomplete="off"
+                   autofocus>
           </div>
+          {% if form.username.errors %}
+            <span class="field-error">{{ form.username.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <!-- Password Field -->
+        <!-- Password Field - No eye icon -->
         <div class="form-group">
-          <label for="{{ form.password.id_for_label }}">
-            <i class="fas fa-lock"></i> Password
-          </label>
-          <div class="input-wrapper">
+          <div class="input-group">
             <i class="fas fa-lock"></i>
-            {{ form.password }}
-            <button type="button" class="toggle-password" data-target="{{ form.password.id_for_label }}">
-              <i class="far fa-eye-slash"></i>
-            </button>
-            {% if form.password.errors %}
-              <span class="field-error">{{ form.password.errors.0 }}</span>
-            {% endif %}
+            <input type="password" 
+                   name="password" 
+                   id="id_password" 
+                   class="form-control" 
+                   placeholder="Password"
+                   autocomplete="off">
           </div>
+          {% if form.password.errors %}
+            <span class="field-error">{{ form.password.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <button type="submit">
-          <i class="fas fa-sign-in-alt"></i> Login
+        <!-- Remember Me and Forgot Password -->
+        <div class="form-options">
+          <label class="checkbox-label">
+            <input type="checkbox" name="remember_me" id="remember_me">
+            <span>Remember me</span>
+          </label>
+          <a href="{% url 'reset_password' %}" class="forgot-link">
+            <i class="fas fa-key" style="font-size: 12px;"></i> Forgot password?
+          </a>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="login-btn">
+          <i class="fas fa-sign-in-alt"></i> Sign in
         </button>
       </form>
 
-      <div class="links">
-        <a href="{% url 'reset_password' %}" class="forgot-password">
-          <i class="fas fa-key"></i> Forgot your password?
-        </a>
-        <p style="margin-top: 15px;">
-          Don't have an account?
-          <a href="{% url 'signup' %}">
-            <i class="fas fa-user-plus"></i> Sign up here
-          </a>
-        </p>
+      <!-- Divider -->
+      <div class="divider">
+        <span>New to SUNMAC?</span>
+      </div>
+
+      <!-- Sign Up Link -->
+      <div class="signup-link">
+        <p>Don't have an account? <a href="{% url 'signup' %}">Create an account</a></p>
       </div>
     </div>
-  </section>
+  </div>
 
   <script>
-    // Password visibility toggle with icon switching
-    document.querySelectorAll('.toggle-password').forEach(button => {
-      button.addEventListener('click', function() {
-        const targetId = this.getAttribute('data-target');
-        const input = document.getElementById(targetId);
-        if (input) {
-          const icon = this.querySelector('i');
-          if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-          } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-          }
+    // Clear any auto-filled values on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const usernameField = document.getElementById('id_username');
+      if (usernameField && usernameField.value) {
+        if (usernameField.value.match(/[\d\-]/) && !usernameField.value.match(/[a-zA-Z]/)) {
+          usernameField.value = '';
         }
-      });
-    });
-
-    // Add error class styling to fields with errors
-    document.querySelectorAll('.field-error').forEach(error => {
-      const input = error.previousElementSibling;
-      if (input && input.tagName === 'INPUT') {
-        input.classList.add('error');
+      }
+      if (usernameField) {
+        usernameField.focus();
       }
     });
   </script>

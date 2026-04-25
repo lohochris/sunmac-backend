@@ -24,16 +24,16 @@
       padding: 20px;
     }
 
-    .signup-section {
+    .signup-container {
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
     }
 
-    .section-wrapper {
+    .signup-card {
       background: white;
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
       animation: fadeInUp 0.5s ease;
     }
 
@@ -48,12 +48,32 @@
       }
     }
 
-    h2 {
+    .signup-header {
       text-align: center;
-      color: #1a237e;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
+    }
+
+    .signup-header h2 {
       font-size: 28px;
-      font-weight: 600;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .signup-header p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    /* Two-column layout for name fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .form-group {
@@ -61,53 +81,91 @@
       position: relative;
     }
 
+    .form-group.full-width {
+      margin-bottom: 20px;
+    }
+
     label {
       display: block;
       margin-bottom: 8px;
-      color: #333;
+      color: #374151;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 13px;
     }
 
-    .input-wrapper {
+    label i {
+      margin-right: 6px;
+      color: #4f46e5;
+      font-size: 12px;
+    }
+
+    .input-group {
       position: relative;
       display: flex;
       align-items: center;
     }
 
-    .input-wrapper i:first-child {
+    .input-group i {
       position: absolute;
-      left: 15px;
-      color: #999;
-      font-size: 18px;
+      left: 14px;
+      color: #9ca3af;
+      font-size: 16px;
       pointer-events: none;
       z-index: 1;
     }
 
     .form-control {
       width: 100%;
-      padding: 12px 45px 12px 45px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
+      padding: 12px 50px 12px 42px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
       font-size: 14px;
       transition: all 0.3s ease;
       font-family: inherit;
+      background: #f9fafb;
     }
 
     .form-control:focus {
       outline: none;
-      border-color: #1a237e;
-      box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+      border-color: #4f46e5;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-control.error {
+      border-color: #ef4444;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 14px;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    /* Country code dropdown - improved visibility */
+    select.country-code {
+      width: 140px;
+      overflow-y: auto;
+    }
+
+    select.country-code option {
+      padding: 8px;
     }
 
     .toggle-password {
       position: absolute;
-      right: 15px;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
       background: none;
       border: none;
       cursor: pointer;
-      color: #999;
-      font-size: 18px;
+      color: #9ca3af;
+      font-size: 16px;
       padding: 0;
       display: flex;
       align-items: center;
@@ -117,23 +175,39 @@
     }
 
     .toggle-password:hover {
-      color: #1a237e;
+      color: #4f46e5;
+    }
+
+    /* Phone input with country code */
+    .phone-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .country-code {
+      width: 140px;
+      flex-shrink: 0;
+    }
+
+    .phone-number {
+      flex: 1;
     }
 
     .help-text {
       font-size: 11px;
-      color: #666;
-      margin-top: 5px;
+      color: #6b7280;
+      margin-top: 6px;
       padding-left: 5px;
     }
 
     .password-requirements {
       font-size: 11px;
-      color: #666;
+      color: #6b7280;
       margin-top: 8px;
       padding: 8px 12px;
       background: #f5f5f5;
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
     .password-requirements ul {
@@ -147,114 +221,209 @@
     .password-match-status {
       font-size: 12px;
       margin-top: 8px;
-      padding: 5px 10px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
     }
 
     .match-success {
-      color: #4caf50;
-      background: #e8f5e9;
+      color: #059669;
+      background: #ecfdf5;
     }
 
     .match-error {
-      color: #f44336;
-      background: #ffebee;
+      color: #dc2626;
+      background: #fef2f2;
     }
 
-    button[type="submit"] {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
+    /* Checkbox styling */
+    .terms-group {
+      margin: 24px 0 20px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
       cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-top: 10px;
+      font-size: 13px;
+      color: #4b5563;
+      line-height: 1.5;
     }
 
-    button[type="submit"]:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+    .checkbox-label input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      cursor: pointer;
+      accent-color: #4f46e5;
     }
 
-    .error-message {
-      background: #ffebee;
-      color: #f44336;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #f44336;
-      font-size: 14px;
-    }
-
-    .success-message {
-      background: #e8f5e9;
-      color: #4caf50;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #4caf50;
-      font-size: 14px;
-    }
-
-    .info-message {
-      background: #e3f2fd;
-      color: #2196f3;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      border-left: 4px solid #2196f3;
-      font-size: 14px;
-    }
-
-    .links {
-      text-align: center;
-      margin-top: 25px;
-      padding-top: 20px;
-      border-top: 1px solid #e0e0e0;
-    }
-
-    .links a {
-      color: #1a237e;
+    .checkbox-label a {
+      color: #4f46e5;
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.3s ease;
     }
 
-    .links a:hover {
-      color: #283593;
+    .checkbox-label a:hover {
       text-decoration: underline;
     }
 
+    /* Submit Button */
+    .signup-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 24px;
+    }
+
+    .signup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .signup-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Divider */
+    .divider {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #e5e7eb;
+    }
+
+    .divider span {
+      background: white;
+      padding: 0 16px;
+      position: relative;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    /* Login link */
+    .login-link {
+      text-align: center;
+    }
+
+    .login-link p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #4f46e5;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Alert messages */
+    .alert {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-error {
+      background: #fef2f2;
+      color: #dc2626;
+      border-left: 4px solid #dc2626;
+    }
+
+    .alert-success {
+      background: #ecfdf5;
+      color: #059669;
+      border-left: 4px solid #059669;
+    }
+
+    .alert-info {
+      background: #eff6ff;
+      color: #2563eb;
+      border-left: 4px solid #2563eb;
+    }
+
     .field-error {
-      color: #f44336;
-      font-size: 12px;
-      margin-top: 5px;
+      color: #dc2626;
+      font-size: 11px;
+      margin-top: 6px;
       display: block;
     }
 
-    input.error, select.error {
-      border-color: #f44336;
+    /* Responsive */
+    @media (max-width: 560px) {
+      .signup-card {
+        padding: 28px 24px;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      
+      .signup-header h2 {
+        font-size: 24px;
+      }
+      
+      .phone-input-group {
+        flex-direction: column;
+      }
+      
+      .country-code {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <section class="signup-section">
-    <div class="section-wrapper">
-      <h2>
-        <i class="fas fa-user-plus" style="margin-right: 10px;"></i>
-        Create an Account
-      </h2>
-      
+  <div class="signup-container">
+    <div class="signup-card">
+      <div class="signup-header">
+        <h2>Create an Account</h2>
+        <p>Join SUNMAC to start your AI-powered math journey</p>
+      </div>
+
       <!-- Display messages -->
       {% if messages %}
         {% for message in messages %}
-          <div class="{% if message.tags == 'success' %}success-message{% elif message.tags == 'error' %}error-message{% else %}info-message{% endif %}">
-            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}" style="margin-right: 8px;"></i>
-            {{ message }}
+          <div class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
           </div>
         {% endfor %}
       {% endif %}
@@ -262,107 +431,184 @@
       <form method="post" class="signup-form" id="signupForm">
         {% csrf_token %}
         
-        <!-- Username Field -->
-        <div class="form-group">
-          <label for="{{ form.username.id_for_label }}">
-            <i class="fas fa-user"></i> Username
-          </label>
-          <div class="input-wrapper">
-            <i class="fas fa-user"></i>
-            {{ form.username }}
-            {% if form.username.errors %}
-              <span class="field-error">{{ form.username.errors.0 }}</span>
-            {% endif %}
+        <!-- Row: First Name + Last Name -->
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> First Name</label>
+            <div class="input-group">
+              <i class="fas fa-user"></i>
+              <input type="text" name="first_name" id="id_first_name" class="form-control" placeholder="First name" value="{{ form.first_name.value|default:'' }}">
+            </div>
           </div>
-          <div class="help-text">150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Last Name</label>
+            <div class="input-group">
+              <i class="fas fa-user"></i>
+              <input type="text" name="last_name" id="id_last_name" class="form-control" placeholder="Last name" value="{{ form.last_name.value|default:'' }}">
+            </div>
+          </div>
         </div>
 
-        <!-- Email Field -->
-        <div class="form-group">
-          <label for="{{ form.email.id_for_label }}">
-            <i class="fas fa-envelope"></i> Email
-          </label>
-          <div class="input-wrapper">
+        <!-- Email Address -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-envelope"></i> Email Address</label>
+          <div class="input-group">
             <i class="fas fa-envelope"></i>
             {{ form.email }}
-            {% if form.email.errors %}
-              <span class="field-error">{{ form.email.errors.0 }}</span>
-            {% endif %}
           </div>
+          {% if form.email.errors %}
+            <span class="field-error">{{ form.email.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <!-- Role Field -->
-        <div class="form-group">
-          <label for="{{ form.role.id_for_label }}">
-            <i class="fas fa-user-tag"></i> Role
-          </label>
-          <div class="input-wrapper">
+        <!-- Mobile Phone (with country code) -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-phone"></i> Mobile Phone</label>
+          <div class="phone-input-group">
+            <select name="country_code" id="id_country_code" class="form-control country-code" size="1">
+              <option value="+1">+1 (USA/Canada)</option>
+              <option value="+44">+44 (United Kingdom)</option>
+              <option value="+91">+91 (India)</option>
+              <option value="+61">+61 (Australia)</option>
+              <option value="+49">+49 (Germany)</option>
+              <option value="+33">+33 (France)</option>
+              <option value="+39">+39 (Italy)</option>
+              <option value="+34">+34 (Spain)</option>
+              <option value="+55">+55 (Brazil)</option>
+              <option value="+86">+86 (China)</option>
+              <option value="+81">+81 (Japan)</option>
+              <option value="+82">+82 (South Korea)</option>
+              <option value="+7">+7 (Russia)</option>
+              <option value="+27">+27 (South Africa)</option>
+              <option value="+234">+234 (Nigeria)</option>
+              <option value="+233">+233 (Ghana)</option>
+              <option value="+254">+254 (Kenya)</option>
+              <option value="+971">+971 (UAE)</option>
+              <option value="+966">+966 (Saudi Arabia)</option>
+              <option value="+92">+92 (Pakistan)</option>
+              <option value="+880">+880 (Bangladesh)</option>
+              <option value="+62">+62 (Indonesia)</option>
+              <option value="+63">+63 (Philippines)</option>
+              <option value="+84">+84 (Vietnam)</option>
+              <option value="+90">+90 (Turkey)</option>
+              <option value="+48">+48 (Poland)</option>
+              <option value="+46">+46 (Sweden)</option>
+              <option value="+47">+47 (Norway)</option>
+              <option value="+45">+45 (Denmark)</option>
+              <option value="+358">+358 (Finland)</option>
+              <option value="+32">+32 (Belgium)</option>
+              <option value="+41">+41 (Switzerland)</option>
+              <option value="+43">+43 (Austria)</option>
+              <option value="+353">+353 (Ireland)</option>
+              <option value="+351">+351 (Portugal)</option>
+              <option value="+30">+30 (Greece)</option>
+              <option value="+52">+52 (Mexico)</option>
+              <option value="+57">+57 (Colombia)</option>
+              <option value="+54">+54 (Argentina)</option>
+              <option value="+56">+56 (Chile)</option>
+              <option value="+51">+51 (Peru)</option>
+              <option value="+64">+64 (New Zealand)</option>
+              <option value="+212">+212 (Morocco)</option>
+              <option value="+20">+20 (Egypt)</option>
+              <option value="+256">+256 (Uganda)</option>
+              <option value="+255">+255 (Tanzania)</option>
+              <option value="+260">+260 (Zambia)</option>
+              <option value="+263">+263 (Zimbabwe)</option>
+            </select>
+            <input type="tel" name="mobile_phone" id="id_mobile_phone" class="form-control phone-number" placeholder="Phone number">
+          </div>
+          <div class="help-text">We'll use this to contact you about your account</div>
+        </div>
+
+        <!-- Public Display Name / Username -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-id-card"></i> Public Display Name</label>
+          <div class="input-group">
+            <i class="fas fa-id-card"></i>
+            {{ form.username }}
+          </div>
+          <div class="help-text">This will be visible to other users. 150 characters or fewer.</div>
+          {% if form.username.errors %}
+            <span class="field-error">{{ form.username.errors.0 }}</span>
+          {% endif %}
+        </div>
+
+        <!-- Role Selection (Student/Teacher) -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-user-tag"></i> I am a...</label>
+          <div class="input-group">
             <i class="fas fa-user-tag"></i>
             {{ form.role }}
-            {% if form.role.errors %}
-              <span class="field-error">{{ form.role.errors.0 }}</span>
-            {% endif %}
           </div>
+          {% if form.role.errors %}
+            <span class="field-error">{{ form.role.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <!-- Password Field -->
-        <div class="form-group">
-          <label for="{{ form.password1.id_for_label }}">
-            <i class="fas fa-lock"></i> Password
-          </label>
-          <div class="input-wrapper">
+        <!-- Password -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-lock"></i> Password</label>
+          <div class="input-group">
             <i class="fas fa-lock"></i>
             {{ form.password1 }}
             <button type="button" class="toggle-password" data-target="{{ form.password1.id_for_label }}">
               <i class="far fa-eye-slash"></i>
             </button>
-            {% if form.password1.errors %}
-              <span class="field-error">{{ form.password1.errors.0 }}</span>
-            {% endif %}
           </div>
           <div class="password-requirements">
-            <i class="fas fa-info-circle"></i> Password requirements:
+            <i class="fas fa-info-circle"></i> Password must:
             <ul>
-              <li>At least 8 characters long</li>
-              <li>Can't be entirely numeric</li>
-              <li>Can't be too similar to your personal info</li>
+              <li>Be at least 8 characters long</li>
+              <li>Not be entirely numeric</li>
+              <li>Not be too similar to your personal info</li>
             </ul>
           </div>
+          {% if form.password1.errors %}
+            <span class="field-error">{{ form.password1.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <!-- Confirm Password Field -->
-        <div class="form-group">
-          <label for="{{ form.password2.id_for_label }}">
-            <i class="fas fa-lock"></i> Confirm Password
-          </label>
-          <div class="input-wrapper">
+        <!-- Confirm Password -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-lock"></i> Confirm Password</label>
+          <div class="input-group">
             <i class="fas fa-lock"></i>
             {{ form.password2 }}
             <button type="button" class="toggle-password" data-target="{{ form.password2.id_for_label }}">
               <i class="far fa-eye-slash"></i>
             </button>
-            {% if form.password2.errors %}
-              <span class="field-error">{{ form.password2.errors.0 }}</span>
-            {% endif %}
           </div>
           <div class="password-match-status" id="passwordMatchStatus"></div>
+          {% if form.password2.errors %}
+            <span class="field-error">{{ form.password2.errors.0 }}</span>
+          {% endif %}
         </div>
 
-        <button type="submit">
-          <i class="fas fa-arrow-right"></i> Sign Up
+        <!-- Terms Agreement -->
+        <div class="terms-group">
+          <label class="checkbox-label">
+            <input type="checkbox" name="terms" id="termsCheckbox" required>
+            <span>I agree to SUNMAC's <a href="#">Terms of Service</a>, <a href="#">Privacy Policy</a>, and <a href="#">Cookie Policy</a></span>
+          </label>
+        </div>
+
+        <!-- Sign Up Button -->
+        <button type="submit" class="signup-btn">
+          <i class="fas fa-user-plus"></i> Create Account
         </button>
       </form>
 
-      <div class="links">
-        <p>
-          Already have an account?
-          <a href="{% url 'login' %}">
-            <i class="fas fa-sign-in-alt"></i> Login here
-          </a>
-        </p>
+      <!-- Divider -->
+      <div class="divider">
+        <span>Already registered?</span>
+      </div>
+
+      <!-- Login Link -->
+      <div class="login-link">
+        <p>Already have an account? <a href="{% url 'login' %}">Sign in here</a></p>
       </div>
     </div>
-  </section>
+  </div>
 
   <script>
     // Password visibility toggle with icon switching
@@ -412,17 +658,22 @@
 
     // Form validation before submit
     document.getElementById('signupForm').addEventListener('submit', function(e) {
-      if (password1 && password2) {
-        if (password1.value !== password2.value) {
-          e.preventDefault();
-          alert('Passwords do not match!');
-          return false;
-        }
-        if (password1.value.length < 8) {
-          e.preventDefault();
-          alert('Password must be at least 8 characters long!');
-          return false;
-        }
+      const termsCheckbox = document.getElementById('termsCheckbox');
+      
+      if (password1 && password2 && password1.value !== password2.value) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return false;
+      }
+      if (password1 && password1.value.length < 8) {
+        e.preventDefault();
+        alert('Password must be at least 8 characters long!');
+        return false;
+      }
+      if (termsCheckbox && !termsCheckbox.checked) {
+        e.preventDefault();
+        alert('Please agree to the Terms of Service and Privacy Policy');
+        return false;
       }
       return true;
     });
@@ -435,6 +686,14 @@
         if (input) {
           input.classList.add('error');
         }
+      }
+    });
+
+    // Focus on first name field on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const firstNameField = document.getElementById('id_first_name');
+      if (firstNameField) {
+        firstNameField.focus();
       }
     });
   </script>

@@ -80,11 +80,25 @@ def signup_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             try:
-                user = form.save()
-                role = form.cleaned_data['role']
+                user = form.save(commit=False)
+                
+                # Set additional fields
+                user.first_name = form.cleaned_data.get('first_name', '')
+                user.last_name = form.cleaned_data.get('last_name', '')
+                user.email = form.cleaned_data.get('email', '')
+                user.username = form.cleaned_data.get('username', '')
+                user.set_password(form.cleaned_data.get('password1'))
+                
+                # Save the user
+                user.save()
+                
+                # Get role and other data
+                role = form.cleaned_data.get('role', 'student')
+                mobile_phone = form.cleaned_data.get('mobile_phone', '')
+                country_code = form.cleaned_data.get('country_code', '')
                 
                 # Log successful user creation
-                logger.info(f"User created: {user.username} with role: {role}")
+                logger.info(f"User created: {user.username} with role: {role}, email: {user.email}, name: {user.first_name} {user.last_name}")
                 
                 # Check if profile already exists before creating
                 profile, created = Profile.objects.get_or_create(
